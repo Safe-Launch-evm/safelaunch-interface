@@ -14,18 +14,26 @@ import { useAccount, useWalletClient } from 'wagmi';
 import { createWalletClient, custom } from 'viem';
 import { toast } from 'sonner';
 import NumberInput from '@/components/number-input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export function BuyTokenForm({ token }: { token: Token }) {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const [status, setStatus] = useState<STATE_STATUS>(STATE_STATUS.IDLE);
-  const walletClient = createWalletClient({
-    account: address,
-    chain: assetChainTestnet,
-    transport: custom(window.ethereum!)
-  });
+  const [walletClient, setWalletClient] = useState<any>();
+  useEffect(() => {
+    if (!window.ethereum) {
+      console.error('Install browser wallet.');
+      return;
+    }
+    const client = createWalletClient({
+      account: address,
+      chain: assetChainTestnet,
+      transport: window && custom(window?.ethereum!)
+    });
+    setWalletClient(client);
+  }, []);
 
   const form = useZodForm({
     schema: swapTokenSchema

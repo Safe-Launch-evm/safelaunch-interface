@@ -52,12 +52,7 @@ export const CreateTokenFrom = () => {
   const [component, setComponent] = React.useState<number>(0);
   const [imageSrc, setImageSrc] = React.useState<ImageProps | null>(null);
   const [formInputData, setFormInputData] = React.useState<any>();
-
-  const walletClient = createWalletClient({
-    account: address,
-    chain: assetChainTestnet,
-    transport: custom(window.ethereum!)
-  });
+  const [walletClient, setWalletClient] = React.useState<any>();
 
   const form = useZodForm({
     schema: createTokenSchema,
@@ -65,6 +60,19 @@ export const CreateTokenFrom = () => {
   });
 
   const { setValue } = form;
+
+  useEffect(() => {
+    if (!window.ethereum) {
+      console.error('Install browser wallet.');
+      return;
+    }
+    const client = createWalletClient({
+      account: address,
+      chain: assetChainTestnet,
+      transport: window && custom(window?.ethereum!)
+    });
+    setWalletClient(client);
+  }, []);
 
   useEffect(() => {
     if (imageSrc) setValue('logoUrl', imageSrc.url);

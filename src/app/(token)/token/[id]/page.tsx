@@ -3,20 +3,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TransactionTable from './_components/transaction-table';
 import Comment from './_components/comment';
 import BuyAndSellCard from './_components/buy-and-sell-card';
-import { fetchSingleToken } from '@/lib/actions/token';
+import { fetchSingleToken, fetchTokenStats } from '@/lib/actions/token';
 import AddComment from './_components/add-comment';
 import { fetchTokenComments } from '@/lib/actions/comment';
 import { _formatAddress, formatAddress, formatDateToNow } from '@/lib/utils';
-import TokenCurveData, { TokenStats } from './_components/token-curve-data';
+import { TokenCurveData, TokenStats } from './_components/token-curve-data';
 import TokenHeader from './_components/token-header';
 import TokenDescription from './_components/token-description';
 import { Chart } from './_components/chart-container';
 
 export default async function TokenPage({ params }: { params: { id: string } }) {
   const token = await fetchSingleToken(params.id);
+
   const comments = await fetchTokenComments(params.id);
 
   if (!token) return;
+
+  const data = await fetchTokenStats(token.unique_id);
 
   return (
     <Shell className="pt-[160px]">
@@ -27,7 +30,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
           {/* <div className="h-[361px] w-full rounded bg-card-foreground" /> */}
           <Chart />
 
-          {token && <TokenCurveData token={token} />}
+          {token && <TokenCurveData token={token} data={data} />}
           <Tabs defaultValue="comments">
             <TabsList>
               <TabsTrigger value="comments">Comments</TabsTrigger>
@@ -58,7 +61,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
               </section>
             </TabsContent>
             <TabsContent value="transactions">
-              <TransactionTable />
+              <TransactionTable token={token} />
             </TabsContent>
           </Tabs>
         </div>
@@ -66,7 +69,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
         <div className="flex w-full flex-col gap-4 md:w-[38%]">
           <TokenHeader token={token} />
           <BuyAndSellCard token={token} />
-          <TokenStats token={token} />
+          <TokenStats data={data} />
         </div>
       </div>
       {/* mobile */}
@@ -87,7 +90,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
               <TokenDescription token={token} />
               <div className="h-[361px] w-full rounded bg-card-foreground" />
 
-              {token && <TokenCurveData token={token} />}
+              {token && <TokenCurveData token={token} data={data} />}
               <Tabs defaultValue="comments">
                 <TabsList>
                   <TabsTrigger value="comments">Comments</TabsTrigger>
@@ -118,7 +121,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
                   </section>
                 </TabsContent>
                 <TabsContent value="transactions">
-                  <TransactionTable />
+                  <TransactionTable token={token} />
                 </TabsContent>
               </Tabs>
             </div>
@@ -127,7 +130,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
             <div className="w-full py-4">
               <BuyAndSellCard token={token} />
             </div>
-            <TokenStats token={token} />
+            <TokenStats data={data} />
           </TabsContent>
         </Tabs>
       </section>

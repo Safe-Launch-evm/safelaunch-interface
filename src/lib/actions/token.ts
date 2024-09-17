@@ -140,6 +140,22 @@ export async function fetchSingleToken(tokenId: string): Promise<Token | null> {
   }
 }
 
+export async function fetchTokenStats(tokenId: string): Promise<any | null> {
+  try {
+    const token: any = await client(`/token/stats/${tokenId}`, {
+      tag: 'stats'
+    });
+    const result = token.result;
+
+    if (!result) {
+      return null;
+    }
+    return result;
+  } catch (error) {
+    return null;
+  }
+}
+
 export async function favoriteToken(tokenId: string) {
   try {
     const token = await getCookieStorage('auth_token');

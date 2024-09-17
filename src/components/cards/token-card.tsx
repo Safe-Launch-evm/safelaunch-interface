@@ -79,7 +79,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
           ${token.symbol}
         </dd>
         <dd className="text-[0.875rem]/[0.00875rem] font-light">
-          Market cap: <span className="text-[#6100FF]">{token.market_cap}</span>
+          {/* Market cap: <span className="text-[#6100FF]">{token.market_cap}</span> */}
         </dd>
       </div>
       <AspectRatio ratio={2 / 1.5}>
@@ -105,7 +105,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
         className="h-[134px] min-w-[134px] rounded-lg bg-cover bg-no-repeat lg:min-w-[208px]"
         priority
       /> */}
-      <div className="flex h-full w-full items-center justify-between">
+      <div className="flex size-full items-center justify-between">
         <div className="flex h-full flex-col gap-1">
           <dt className="text-ellipsis font-bold">
             <Link href={`/token/${token.unique_id}`}>{truncate(token.name, 14)}</Link>

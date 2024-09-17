@@ -2,10 +2,9 @@
 import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SafeLaunch from '@/contract/safe-launch';
 import { SwapTokenInput, swapTokenSchema } from '@/lib/validations/swap-token-schema';
-import { useFormik } from 'formik';
 import { STATE_STATUS, Token } from '@/types';
 import { ArrowBigDown, LoaderCircle } from 'lucide-react';
 import Image from 'next/image';
@@ -21,11 +20,26 @@ export function SellTokenForm({ token }: { token: Token }) {
   const { address, isConnected } = useAccount();
   const [status, setStatus] = useState<STATE_STATUS>(STATE_STATUS.IDLE);
 
-  const walletClient = createWalletClient({
-    account: address,
-    chain: assetChainTestnet,
-    transport: custom(window.ethereum!)
-  });
+  const [walletClient, setWalletClient] = useState<any>();
+
+  // const walletClient = createWalletClient({
+  //   account: address,
+  //   chain: assetChainTestnet,
+  //   transport: window && custom(window?.ethereum!)
+  // });
+
+  useEffect(() => {
+    if (!window.ethereum) {
+      console.error('Install browser wallet.');
+      return;
+    }
+    const client = createWalletClient({
+      account: address,
+      chain: assetChainTestnet,
+      transport: window && custom(window?.ethereum!)
+    });
+    setWalletClient(client);
+  }, []);
 
   const form = useZodForm({
     schema: swapTokenSchema
@@ -68,7 +82,7 @@ export function SellTokenForm({ token }: { token: Token }) {
         throw new Error(reciept.data);
       } else {
         toast.success('Success!', {
-          description: `${data.amount} ${token.symbol} purchased successfully.`
+          description: `${data.amount} ${token.symbol} sold successfully.`
         });
       }
     } catch (error: any) {
@@ -107,7 +121,7 @@ export function SellTokenForm({ token }: { token: Token }) {
         </div>
         <NumberInput
           thousandSeparator=","
-          className="flex w-full rounded-lg border border-none bg-input px-0 py-0 font-inter text-[1.5rem] font-normal text-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#848E9C] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full rounded-lg border border-none bg-input p-0 font-inter text-[1.5rem] font-normal text-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#848E9C] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           allowNegative={false}
           placeholder="0.00"
           {...form.register('amount', { required: true })}

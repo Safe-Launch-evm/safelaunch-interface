@@ -1,54 +1,14 @@
-'use client';
-
 import { Progress } from '@/components/ui/progress';
-import { useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
-import { createWalletClient, custom } from 'viem';
-import { assetChainTestnet } from 'viem/chains';
 import { Token } from '@/types';
-import SafeLaunch from '@/contract/safe-launch';
 import { toIntNumberFormat } from '@/lib/utils';
-
-interface iCurveStats {
-  currentLiquidity: string;
-  targetLiquidity: number;
-}
-interface iMarketStats {
-  price: number;
-  circulatingSupply: string;
-  marketcap: number;
-  liquidity: string;
-}
+import { fetchTokenStats } from '@/lib/actions/token';
 
 function calcCurvePercent(currentLiquidity: number, targetLiquidity: number): number {
   return (currentLiquidity * 100) / targetLiquidity;
 }
 
-const TokenCurveData = ({ token }: { token: Token }) => {
-  const { address, isConnected } = useAccount();
-  const [curveStats, setCurveStats] = useState<iCurveStats>({
-    currentLiquidity: '0',
-    targetLiquidity: 0
-  });
-  const [marketStats, setMarketStats] = useState<iMarketStats>({
-    price: 0,
-    circulatingSupply: '0',
-    marketcap: 0,
-    liquidity: '0'
-  });
-
-  const walletClient = createWalletClient({
-    chain: assetChainTestnet,
-    transport: custom(window.ethereum!)
-  });
-
-  useEffect(() => {
-    if (!walletClient || !token) return;
-
-    const safeLaunch = new SafeLaunch(walletClient, address);
-    safeLaunch.getTokenCurveStats(token?.contract_address).then(res => setCurveStats(res));
-    safeLaunch.getTokenMarketStats(token?.contract_address).then(res => setMarketStats(res));
-  }, []);
+export async function TokenCurveData({ token, data }: { token: Token; data: any }) {
+  // const data = await fetchTokenStats(token.unique_id);
 
   return (
     <div className="flex flex-col gap-4 rounded border border-card-foreground bg-card p-4">
@@ -56,64 +16,52 @@ const TokenCurveData = ({ token }: { token: Token }) => {
       <div className="w-full py-4">
         <Progress
           value={calcCurvePercent(
-            Number(curveStats?.currentLiquidity),
-            curveStats.targetLiquidity
+            Number(data?.curveStats?.currentRwaLiquidity),
+            data?.curveStats.targetRwaLiquidity
           )}
         />
       </div>
       <p className="text-[1rem]/[2rem] md:text-[1.125rem]/[2rem]">
         There are{' '}
-        <HighlightText value={toIntNumberFormat(Number(marketStats?.circulatingSupply))} />{' '}
+        <HighlightText
+          value={toIntNumberFormat(Number(data?.marketStats?.circulatingSupplyInUsd))}
+        />{' '}
         <HighlightText value={token?.symbol} /> available for sale through the bonding curve,
-        with the current balance of <HighlightText value={curveStats?.currentLiquidity} /> RWA
-        in the curve. As the market cap progresses and reaches{' '}
-        <HighlightText value={curveStats?.targetLiquidity} /> RWA, the entire LP tokens in the
-        bonding curve will be burned, providing a base liquidity for{' '}
+        with the current balance of{' '}
+        <HighlightText
+          value={toIntNumberFormat(Number(data?.curveStats?.currentRwaLiquidity))}
+        />{' '}
+        RWA in the curve. As the market cap progresses and reaches{' '}
+        <HighlightText value={data?.curveStats?.targetRwaLiquidity} /> RWA, the entire LP
+        tokens in the bonding curve will be burned, providing a base liquidity for{' '}
         <HighlightText value={token?.symbol} /> tokens in future.
       </p>
     </div>
   );
-};
-
-export default TokenCurveData;
+}
 
 const HighlightText = ({ value }: { value: any }) => (
-  <span className="text-accent-200 font-bold">{value}</span>
+  <span className="font-bold text-accent-200">{value}</span>
 );
 
-export function TokenStats({ token }: { token: Token }) {
-  const { address } = useAccount();
-
-  const [marketStats, setMarketStats] = useState<iMarketStats>({
-    price: 0,
-    circulatingSupply: '0',
-    marketcap: 0,
-    liquidity: '0'
-  });
-
-  const walletClient = createWalletClient({
-    chain: assetChainTestnet,
-    transport: custom(window.ethereum!)
-  });
-
-  useEffect(() => {
-    if (!walletClient || !token) return;
-
-    const safeLaunch = new SafeLaunch(walletClient, address);
-    safeLaunch.getTokenMarketStats(token?.contract_address).then(res => setMarketStats(res));
-  }, []);
-
+export async function TokenStats({ data }: { data: any }) {
   return (
     <section className="grid w-full grid-cols-2 gap-3">
       <TokenStatsCard
         title="Price"
-        value={`${toIntNumberFormat(Number(marketStats.price))} ${token.symbol}`}
+        value={`${toIntNumberFormat(Number(data?.marketStats.priceInUsd))} USD`}
       />
-      <TokenStatsCard title="Marketcap" value={`${marketStats.marketcap}`} />
-      <TokenStatsCard title="Liquidity" value={`${marketStats.liquidity}`} />
+      <TokenStatsCard
+        title="Marketcap"
+        value={`${toIntNumberFormat(data?.marketStats.marketcapInUsd)} USD`}
+      />
+      <TokenStatsCard
+        title="Liquidity"
+        value={`${toIntNumberFormat(Number(data?.marketStats.liquidityInUsd))} USD`}
+      />
       <TokenStatsCard
         title="Circulating Supply"
-        value={`${toIntNumberFormat(Number(marketStats?.circulatingSupply))}`}
+        value={`${toIntNumberFormat(Number(data?.marketStats?.circulatingSupplyInUsd))} USD`}
       />
     </section>
   );
