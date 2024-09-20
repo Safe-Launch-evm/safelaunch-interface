@@ -26,7 +26,6 @@ export async function generateMetadata({
   // fetch data
   const token = await fetchSingleToken(params.id);
   return {
-    themeColor: '#000000',
     title: token?.name,
     openGraph: {
       images: [
@@ -162,7 +161,9 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
                 </section>
               </TabsContent>
               <TabsContent value="transactions">
-                <TransactionTable token={token} />
+                <div className="grid gap-6">
+                  <TransactionTable token={token} />
+                </div>
               </TabsContent>
             </Tabs>
           </TabsContent>
