@@ -1,8 +1,12 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { _formatAddress, formatAddress } from '@/lib/utils';
 import { Token } from '@/types';
-import { Copy, Star } from 'lucide-react';
+import { CircleCheck, Copy, Star } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
+import { toast } from 'sonner';
 
 export default function TokenHeader({ token }: { token: Token }) {
   return (
@@ -14,7 +18,7 @@ export default function TokenHeader({ token }: { token: Token }) {
             <span> Created by</span>
             <Link
               href={`/profile/${token.creator_id}`}
-              className="hover:text-accent-200 text-primary"
+              className="text-primary hover:text-accent-200"
             >
               {token.creator.username ?? formatAddress(token.creator.wallet_address)}
             </Link>
@@ -35,8 +39,32 @@ export default function TokenHeader({ token }: { token: Token }) {
             {token && _formatAddress(token?.contract_address, 16)}
           </Link>
         </span>
-        <Copy size={24} />
+        {/* <Copy size={24} /> */}
+        <CopyAddressButton contractAddress={token.contract_address} />
       </div>
     </div>
+  );
+}
+
+export function CopyAddressButton({ contractAddress }: { contractAddress: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (copied) setCopied(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [copied, setCopied]);
+
+  async function handleCopy() {
+    setCopied(true);
+    toast.success('Copied!');
+    await navigator.clipboard.writeText(contractAddress!);
+  }
+
+  return (
+    <button onClick={handleCopy}>
+      {copied ? <CircleCheck className="size-6 text-primary" /> : <Copy className="size-6" />}
+    </button>
   );
 }

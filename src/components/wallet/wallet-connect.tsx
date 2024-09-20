@@ -24,6 +24,7 @@ import { formatEther } from 'viem';
 import {
   Check,
   ChevronLeft,
+  CircleCheck,
   CircleX,
   Copy,
   Delete,
@@ -442,7 +443,6 @@ function RegisterUserForm() {
   }
 
   async function onSubmit(data: ProfileInput) {
-    console.log('amamam');
     setStatus(STATE_STATUS.LOADING);
     try {
       const result = await registerUser(data);
@@ -451,6 +451,7 @@ function RegisterUserForm() {
         toast.error('Opps!', { description: 'An error occurred' });
         return;
       }
+      toast.error('Success', { description: 'User profile updated' });
       setStatus(STATE_STATUS.SUCCESS);
       context.setOpenAuthDialog(false);
     } catch (error) {
@@ -533,7 +534,7 @@ function RegisterUserForm() {
           </div>
 
           <div className="flex w-full flex-col gap-6">
-            <Input label="Username" placeholder="Symbol" {...form.register('username')} />
+            <Input label="Username" placeholder="E.g: GG" {...form.register('username')} />
             <Textarea placeholder="Enter text" label="Bio" {...form.register('bio')} />
             <div className="flex items-center justify-end gap-4">
               <Button
@@ -545,11 +546,7 @@ function RegisterUserForm() {
               >
                 Skip
               </Button>
-              <Button
-                type={'submit'}
-                className="size-sm"
-                disabled={status === STATE_STATUS.LOADING}
-              >
+              <Button type={'submit'} size={'sm'} disabled={status === STATE_STATUS.LOADING}>
                 {status === STATE_STATUS.LOADING ? <LoaderCircle size={20} /> : null}
                 Save
               </Button>
@@ -577,9 +574,9 @@ function CopyAddressButton() {
   }
 
   return (
-    <button className="text-muted-foreground" onClick={handleCopy}>
+    <button onClick={handleCopy}>
       {copied ? (
-        <Check className="size-4" strokeWidth={4} />
+        <CircleCheck className="size-4 text-primary" strokeWidth={4} />
       ) : (
         <Copy className="size-4" strokeWidth={4} />
       )}
@@ -604,7 +601,7 @@ function BackChevron() {
       className="absolute left-[26px] top-[42px] z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground md:top-[26px]"
       onClick={handleClick}
     >
-      <ChevronLeft className="h-4 w-4" />
+      <ChevronLeft className="size-4" />
       <span className="sr-only">Cancel connection</span>
     </button>
   );

@@ -50,7 +50,7 @@ export function formatDateToNow(date: Date | string | number) {
 export function toIntNumberFormat(value: number, decimalPlaces: number = 5): string {
   // Handle the case where the value is 0
   if (value === 0) {
-    return '0'.padEnd(decimalPlaces + 2, '0');
+    return '0.00';
   }
 
   // Calculate the factor for rounding
