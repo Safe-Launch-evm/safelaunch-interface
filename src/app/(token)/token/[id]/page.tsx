@@ -7,11 +7,12 @@ import BuyAndSellCard from './_components/buy-and-sell-card';
 import {
   fetchSingleToken,
   fetchTokenPriceHistory,
+  fetchTokens,
   fetchTokenStats
 } from '@/lib/actions/token';
 import AddComment from './_components/add-comment';
 import { fetchTokenComments } from '@/lib/actions/comment';
-import { _formatAddress, formatAddress, formatDateToNow } from '@/lib/utils';
+import { formatAddress, formatDateToNow } from '@/lib/utils';
 import { TokenCurveData, TokenStats } from './_components/token-curve-data';
 import TokenHeader from './_components/token-header';
 import TokenDescription from './_components/token-description';
@@ -55,13 +56,12 @@ export async function generateMetadata({
 
 export default async function TokenPage({ params }: { params: { id: string } }) {
   const token = await fetchSingleToken(params.id);
-
   const comments = await fetchTokenComments(params.id);
-
   if (!token) return;
 
   const data = await fetchTokenStats(token.unique_id);
   const priceHistory = await fetchTokenPriceHistory(token.unique_id);
+  const { favorites } = await fetchTokens({ favorites: true });
 
   return (
     <Shell className="pt-[160px]">
@@ -109,14 +109,14 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
         </div>
 
         <div className="flex w-full flex-col gap-4 md:w-[38%]">
-          <TokenHeader token={token} />
+          <TokenHeader token={token} favorites={favorites} />
           <BuyAndSellCard token={token} />
           <TokenStats token={token} data={data} />
         </div>
       </div>
       {/* mobile */}
       <section className="block w-full md:hidden">
-        <TokenHeader token={token} />
+        <TokenHeader token={token} favorites={favorites} />
 
         <Tabs defaultValue="details">
           <TabsList className="w-full">

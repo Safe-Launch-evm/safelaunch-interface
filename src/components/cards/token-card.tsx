@@ -124,7 +124,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
         </div>
         {token.user ? (
           <button
-            className="flex size-[34px] items-center justify-center rounded-lg border bg-primary"
+            className="flex size-[34px] items-center justify-center rounded-lg border bg-primary text-primary-foreground hover:text-primary-foreground hover:shadow-dip"
             disabled={status === STATE_STATUS.LOADING}
             onClick={removeFromFavorite}
           >
@@ -137,7 +137,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
         ) : (
           <button
             type="button"
-            className="flex size-[34px] items-center justify-center rounded-lg border"
+            className="flex size-[34px] items-center justify-center rounded-lg border hover:bg-primary hover:text-primary-foreground hover:shadow-dip"
             disabled={status === STATE_STATUS.LOADING}
             onClick={addToFavorite}
           >
