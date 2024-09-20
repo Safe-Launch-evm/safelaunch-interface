@@ -75,3 +75,19 @@ export type TokenLike = {
     creator_id: string;
   };
 };
+
+export type TokenHistoryItem = {
+  unique_id: string;
+  price_per_native: string;
+  token_id: string;
+  created_at: string;
+  token: {
+    unique_id: string;
+    contract_address: string;
+  };
+};
+
+export type TokenPriceHistory = {
+  currentPricePerNative: number;
+  history: TokenHistoryItem[];
+};

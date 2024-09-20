@@ -3,14 +3,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TransactionTable from './_components/transaction-table';
 import Comment from './_components/comment';
 import BuyAndSellCard from './_components/buy-and-sell-card';
-import { fetchSingleToken, fetchTokenStats } from '@/lib/actions/token';
+import {
+  fetchSingleToken,
+  fetchTokenPriceHistory,
+  fetchTokenStats
+} from '@/lib/actions/token';
 import AddComment from './_components/add-comment';
 import { fetchTokenComments } from '@/lib/actions/comment';
 import { _formatAddress, formatAddress, formatDateToNow } from '@/lib/utils';
 import { TokenCurveData, TokenStats } from './_components/token-curve-data';
 import TokenHeader from './_components/token-header';
 import TokenDescription from './_components/token-description';
-import { Chart } from './_components/chart-container';
+import { TokenChart } from './_components/token-chart';
 
 export default async function TokenPage({ params }: { params: { id: string } }) {
   const token = await fetchSingleToken(params.id);
@@ -20,6 +24,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
   if (!token) return;
 
   const data = await fetchTokenStats(token.unique_id);
+  const priceHistory = await fetchTokenPriceHistory(token.unique_id);
 
   return (
     <Shell className="pt-[160px]">
@@ -28,7 +33,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
         <div className="flex w-full flex-col gap-10 md:w-3/4">
           <TokenDescription token={token} />
           {/* <div className="h-[361px] w-full rounded bg-card-foreground" /> */}
-          <Chart />
+          {priceHistory && <TokenChart history={priceHistory} />}
 
           {token && <TokenCurveData token={token} data={data} />}
           <Tabs defaultValue="comments">

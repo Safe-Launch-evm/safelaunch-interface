@@ -1,4 +1,4 @@
-import { Token, TokenLike } from '@/types';
+import { Token, TokenHistoryItem, TokenLike, TokenPriceHistory } from '@/types';
 import client from '../client';
 import { getCookieStorage } from '../cookie-storage';
 import { CreateTokenInput } from '../validations/create-token-schema';
@@ -183,6 +183,33 @@ export async function deleteFavoriteToken(tokenId: string) {
       }
     );
     return await res.json();
+  } catch (error) {
+    return null;
+  }
+}
+
+type TokenPriceHistoryResult = {
+  error: boolean;
+  data: string;
+  code: number;
+  result: {
+    currentPricePerNative: number;
+    history: TokenHistoryItem[];
+  };
+};
+
+export async function fetchTokenPriceHistory(
+  tokenId: string
+): Promise<TokenPriceHistory | null> {
+  try {
+    const token: TokenPriceHistoryResult = await client(`/token/price-history/${tokenId}`, {
+      tag: 'history'
+    });
+    const result = token.result;
+    if (!result) {
+      return null;
+    }
+    return result;
   } catch (error) {
     return null;
   }

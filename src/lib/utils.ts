@@ -50,7 +50,7 @@ export function formatDateToNow(date: Date | string | number) {
 export function toIntNumberFormat(value: number, decimalPlaces: number = 5): string {
   // Handle the case where the value is 0
   if (value === 0) {
-    return "0".padEnd(decimalPlaces + 2, "0");
+    return '0'.padEnd(decimalPlaces + 2, '0');
   }
 
   // Calculate the factor for rounding
@@ -60,13 +60,13 @@ export function toIntNumberFormat(value: number, decimalPlaces: number = 5): str
   const roundedNumber = Math.ceil(((value ?? 0) + Number.EPSILON) * factor) / factor;
 
   // Convert to string and split into integer and decimal parts
-  const [integerPart, decimalPart = ""] = roundedNumber.toString().split(".");
+  const [integerPart, decimalPart = ''] = roundedNumber.toString().split('.');
 
   // Format the integer part with thousands separators
   const formattedIntegerPart = new Intl.NumberFormat('en-US').format(Number(integerPart));
 
   // Pad the decimal part to the specified number of places
-  const formattedDecimalPart = decimalPart.padEnd(decimalPlaces, "0");
+  const formattedDecimalPart = decimalPart.padEnd(decimalPlaces, '0');
 
   // Combine the parts
   return `${formattedIntegerPart}.${formattedDecimalPart}`;
@@ -88,4 +88,41 @@ export function timeAgo(timestamp: any) {
     const days = Math.floor(diff / 86400);
     return `${days} day${days === 1 ? '' : 's'} ago`;
   }
+}
+
+export function formatPrice(price: number | string, opts: Intl.NumberFormatOptions = {}) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: opts.currency ?? 'USD',
+    notation: opts.notation ?? 'compact',
+    ...opts
+  }).format(Number(price));
+}
+
+export function formatNumber(number: number | string, opts: Intl.NumberFormatOptions = {}) {
+  return new Intl.NumberFormat('en-US', {
+    style: opts.style ?? 'decimal',
+    notation: opts.notation ?? 'standard',
+    minimumFractionDigits: opts.minimumFractionDigits ?? 0,
+    maximumFractionDigits: opts.maximumFractionDigits ?? 2,
+    ...opts
+  }).format(Number(number));
+}
+
+export function formatDate(
+  date: Date | string | number,
+  opts: Intl.DateTimeFormatOptions = {}
+) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: opts.month ?? 'long',
+    day: opts.day ?? 'numeric',
+    year: opts.year ?? 'numeric',
+    ...opts
+  }).format(new Date(date));
+}
+
+export function getDayOfWeek(dateString: string): string {
+  const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'];
+  const date = new Date(dateString);
+  return daysOfWeek[date.getUTCDay()];
 }
