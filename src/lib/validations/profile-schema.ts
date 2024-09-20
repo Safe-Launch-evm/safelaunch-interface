@@ -16,9 +16,11 @@ export const profileSchema = z.object({
     .max(8, { message: "Username can't be longer than 8 characters" })
     .regex(/^[a-zA-Z0-9_]+$/, {
       message: 'Username can only contain letters, numbers, and underscores'
-    }),
-  bio: z.string(),
-  image: imageSchema.optional().nullish(),
+    })
+    .optional()
+    .nullish(),
+  bio: z.string().optional().nullish(),
+  image: z.any().optional().nullish(),
   // image: z.any(
   //   z
   //     .instanceof(File)

@@ -442,7 +442,6 @@ function RegisterUserForm() {
   }
 
   async function onSubmit(data: ProfileInput) {
-    console.log('amamam');
     setStatus(STATE_STATUS.LOADING);
     try {
       const result = await registerUser(data);
@@ -451,6 +450,7 @@ function RegisterUserForm() {
         toast.error('Opps!', { description: 'An error occurred' });
         return;
       }
+      toast.error('Success', { description: 'User profile updated' });
       setStatus(STATE_STATUS.SUCCESS);
       context.setOpenAuthDialog(false);
     } catch (error) {
@@ -545,11 +545,7 @@ function RegisterUserForm() {
               >
                 Skip
               </Button>
-              <Button
-                type={'submit'}
-                className="size-sm"
-                disabled={status === STATE_STATUS.LOADING}
-              >
+              <Button type={'submit'} size={'sm'} disabled={status === STATE_STATUS.LOADING}>
                 {status === STATE_STATUS.LOADING ? <LoaderCircle size={20} /> : null}
                 Save
               </Button>
@@ -604,7 +600,7 @@ function BackChevron() {
       className="absolute left-[26px] top-[42px] z-50 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground md:top-[26px]"
       onClick={handleClick}
     >
-      <ChevronLeft className="h-4 w-4" />
+      <ChevronLeft className="size-4" />
       <span className="sr-only">Cancel connection</span>
     </button>
   );
