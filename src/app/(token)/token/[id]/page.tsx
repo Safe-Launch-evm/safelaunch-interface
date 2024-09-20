@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Shell } from '@/components/shell';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TransactionTable from './_components/transaction-table';
@@ -15,6 +16,42 @@ import { TokenCurveData, TokenStats } from './_components/token-curve-data';
 import TokenHeader from './_components/token-header';
 import TokenDescription from './_components/token-description';
 import { TokenChart } from './_components/token-chart';
+
+export async function generateMetadata({
+  params
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  // fetch data
+  const token = await fetchSingleToken(params.id);
+  return {
+    themeColor: '#000000',
+    title: token?.name,
+    openGraph: {
+      images: [
+        {
+          url: token?.logo_url as string
+        }
+      ],
+      description: `trade $${token?.symbol} on safelaunch`,
+      type: 'website',
+      title: `SafeLaunch ~ ${token?.name}`,
+      siteName: 'launchbox-interface.vercel.app',
+      url: `${process.env.NEXT_PUBLIC_APP_CLIENT}/token/${token?.contract_address}`
+    },
+    twitter: {
+      images: [
+        {
+          url: token?.logo_url as string
+        }
+      ],
+      description: `trade $${token?.symbol} on safelaunch`,
+      title: `Safelaunch ~ ${token?.name}`,
+      site: `${process.env.NEXT_PUBLIC_APP_CLIENT}`,
+      card: 'summary_large_image'
+    }
+  };
+}
 
 export default async function TokenPage({ params }: { params: { id: string } }) {
   const token = await fetchSingleToken(params.id);
@@ -74,7 +111,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
         <div className="flex w-full flex-col gap-4 md:w-[38%]">
           <TokenHeader token={token} />
           <BuyAndSellCard token={token} />
-          <TokenStats data={data} />
+          <TokenStats token={token} data={data} />
         </div>
       </div>
       {/* mobile */}
@@ -135,7 +172,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
             <div className="w-full py-4">
               <BuyAndSellCard token={token} />
             </div>
-            <TokenStats data={data} />
+            <TokenStats token={token} data={data} />
           </TabsContent>
         </Tabs>
       </section>

@@ -24,7 +24,7 @@ export async function TokenCurveData({ token, data }: { token: Token; data: any 
       <p className="text-[1rem]/[2rem] md:text-[1.125rem]/[2rem]">
         There are{' '}
         <HighlightText
-          value={toIntNumberFormat(Number(data?.marketStats?.circulatingSupplyInUsd))}
+          value={toIntNumberFormat(Number(data?.marketStats?.circulatingSupplyInToken))}
         />{' '}
         <HighlightText value={token?.symbol} /> available for sale through the bonding curve,
         with the current balance of{' '}
@@ -44,12 +44,12 @@ const HighlightText = ({ value }: { value: any }) => (
   <span className="font-bold text-accent-200">{value}</span>
 );
 
-export async function TokenStats({ data }: { data: any }) {
+export async function TokenStats({ token, data }: { token: Token; data: any }) {
   return (
     <section className="grid w-full grid-cols-2 gap-3">
       <TokenStatsCard
         title="Price"
-        value={`${toIntNumberFormat(Number(data?.marketStats.priceInUsd))} USD`}
+        value={`${toIntNumberFormat(data?.marketStats.priceInUsd)} USD`}
       />
       <TokenStatsCard
         title="Marketcap"
@@ -57,11 +57,11 @@ export async function TokenStats({ data }: { data: any }) {
       />
       <TokenStatsCard
         title="Liquidity"
-        value={`${toIntNumberFormat(Number(data?.marketStats.liquidityInUsd))} USD`}
+        value={`${toIntNumberFormat(data?.marketStats.liquidityInUsd)} USD`}
       />
       <TokenStatsCard
         title="Circulating Supply"
-        value={`${toIntNumberFormat(Number(data?.marketStats?.circulatingSupplyInUsd))} USD`}
+        value={`${toIntNumberFormat(data?.marketStats?.circulatingSupplyInToken)} ${token?.symbol}`}
       />
     </section>
   );
