@@ -40,7 +40,7 @@ export default function RootLayout({
         >
           <div vaul-drawer-wrapper="" className="bg-background">
             {children}
-            <Toaster />
+            <Toaster position="top-right" />
           </div>
         </body>
       </html>

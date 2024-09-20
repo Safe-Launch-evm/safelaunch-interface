@@ -1,13 +1,13 @@
 import { Progress } from '@/components/ui/progress';
 import { Token } from '@/types';
 import { toIntNumberFormat } from '@/lib/utils';
-import { fetchTokenStats } from '@/lib/actions/token';
+// import { fetchTokenStats } from '@/lib/actions/token';
 
 function calcCurvePercent(currentLiquidity: number, targetLiquidity: number): number {
   return (currentLiquidity * 100) / targetLiquidity;
 }
 
-export async function TokenCurveData({ token, data }: { token: Token; data: any }) {
+export function TokenCurveData({ token, data }: { token: Token; data: any }) {
   // const data = await fetchTokenStats(token.unique_id);
 
   return (
