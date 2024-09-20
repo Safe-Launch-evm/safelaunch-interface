@@ -24,6 +24,7 @@ import { formatEther } from 'viem';
 import {
   Check,
   ChevronLeft,
+  CircleCheck,
   CircleX,
   Copy,
   Delete,
@@ -533,7 +534,7 @@ function RegisterUserForm() {
           </div>
 
           <div className="flex w-full flex-col gap-6">
-            <Input label="Username" placeholder="Symbol" {...form.register('username')} />
+            <Input label="Username" placeholder="E.g: GG" {...form.register('username')} />
             <Textarea placeholder="Enter text" label="Bio" {...form.register('bio')} />
             <div className="flex items-center justify-end gap-4">
               <Button
@@ -573,9 +574,9 @@ function CopyAddressButton() {
   }
 
   return (
-    <button className="text-muted-foreground" onClick={handleCopy}>
+    <button onClick={handleCopy}>
       {copied ? (
-        <Check className="size-4" strokeWidth={4} />
+        <CircleCheck className="size-4 text-primary" strokeWidth={4} />
       ) : (
         <Copy className="size-4" strokeWidth={4} />
       )}
