@@ -109,7 +109,7 @@ function AddToFavoriteButton({
       }
 
       setStatus(STATE_STATUS.SUCCESS);
-      toast.error('Added to favorites');
+      toast.success('Added to favorites');
       router.refresh();
       return;
     } catch (error) {
@@ -137,7 +137,7 @@ function AddToFavoriteButton({
       }
 
       setStatus(STATE_STATUS.SUCCESS);
-      toast.error('Removed');
+      toast.success('Removed from favorites');
       router.refresh();
       return;
     } catch (error) {
