@@ -128,45 +128,43 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
             </TabsTrigger>
           </TabsList>
           <TabsContent value="details">
-            <div className="flex w-full flex-col gap-10">
-              <TokenDescription token={token} />
-              <div className="h-[361px] w-full rounded bg-card-foreground" />
+            <TokenDescription token={token} />
+            <div className="h-[361px] w-full rounded bg-card-foreground" />
 
-              {token && <TokenCurveData token={token} data={data} />}
-              <Tabs defaultValue="comments">
-                <TabsList>
-                  <TabsTrigger value="comments">Comments</TabsTrigger>
-                  <TabsTrigger value="transactions">Transactions</TabsTrigger>
-                </TabsList>
-                <TabsContent value="comments">
-                  <AddComment />
-                  <section className="flex flex-col gap-4 py-10">
-                    {comments &&
-                      comments?.map(comment => {
-                        return (
-                          <Comment
-                            key={comment.unique_id}
-                            username={
-                              comment.user.username
-                                ? comment.user.username
-                                : formatAddress(comment.user.wallet_address)
-                            }
-                            date={formatDateToNow(comment.created_at)}
-                            avatar={
-                              comment.user.profile_image ??
-                              `https://avatar.vercel.sh/${comment.user.username}?size=150`
-                            }
-                            comment={comment.message}
-                          />
-                        );
-                      })}
-                  </section>
-                </TabsContent>
-                <TabsContent value="transactions">
-                  <TransactionTable token={token} />
-                </TabsContent>
-              </Tabs>
-            </div>
+            {token && <TokenCurveData token={token} data={data} />}
+            <Tabs defaultValue="comments">
+              <TabsList>
+                <TabsTrigger value="comments">Comments</TabsTrigger>
+                <TabsTrigger value="transactions">Transactions</TabsTrigger>
+              </TabsList>
+              <TabsContent value="comments">
+                <AddComment />
+                <section className="grid w-full grid-cols-1 gap-4 py-10">
+                  {comments &&
+                    comments?.map(comment => {
+                      return (
+                        <Comment
+                          key={comment.unique_id}
+                          username={
+                            comment.user.username
+                              ? comment.user.username
+                              : formatAddress(comment.user.wallet_address)
+                          }
+                          date={formatDateToNow(comment.created_at)}
+                          avatar={
+                            comment.user.profile_image ??
+                            `https://avatar.vercel.sh/${comment.user.username}?size=150`
+                          }
+                          comment={comment.message}
+                        />
+                      );
+                    })}
+                </section>
+              </TabsContent>
+              <TabsContent value="transactions">
+                <TransactionTable token={token} />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
           <TabsContent value="buy_sell">
             <div className="w-full py-4">
