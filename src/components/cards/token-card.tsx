@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { STATE_STATUS } from '@/types';
 import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
 import { toast } from 'sonner';
+import { getCookieStorage } from '@/lib/cookie-storage';
 
 type TokenCardProps = {
   unique_id: string;
@@ -28,7 +29,15 @@ export default function TokenCard({ ...token }: TokenCardProps) {
   const [status, setStatus] = useState(STATE_STATUS.IDLE);
 
   async function addToFavorite() {
+    const isAuth = await getCookieStorage('auth_token');
+
+    if (!isAuth) {
+      toast.warning('Pleas connect your wallet');
+      return;
+    }
+
     setStatus(STATE_STATUS.LOADING);
+
     try {
       const result = await favoriteToken(token.unique_id);
       if (result.code !== 200) {
@@ -50,6 +59,12 @@ export default function TokenCard({ ...token }: TokenCardProps) {
     }
   }
   async function removeFromFavorite() {
+    const isAuth = await getCookieStorage('auth_token');
+
+    if (!isAuth) {
+      toast.warning('Pleas connect your wallet');
+      return;
+    }
     setStatus(STATE_STATUS.LOADING);
     try {
       const result = await deleteFavoriteToken(token.unique_id);

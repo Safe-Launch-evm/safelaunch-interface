@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
+import { getCookieStorage } from '@/lib/cookie-storage';
 import { _formatAddress, formatAddress } from '@/lib/utils';
 import { STATE_STATUS, Token, TokenLike } from '@/types';
 import { CircleCheck, Copy, LoaderCircle, Star } from 'lucide-react';
@@ -91,6 +92,12 @@ function AddToFavoriteButton({
   const [status, setStatus] = React.useState(STATE_STATUS.IDLE);
 
   async function addToFavorite() {
+    const isAuth = await getCookieStorage('auth_token');
+
+    if (!isAuth) {
+      toast.warning('Pleas connect your wallet');
+      return;
+    }
     setStatus(STATE_STATUS.LOADING);
     try {
       const result = await favoriteToken(tokenId);
@@ -113,6 +120,12 @@ function AddToFavoriteButton({
     }
   }
   async function removeFromFavorite() {
+    const isAuth = await getCookieStorage('auth_token');
+
+    if (!isAuth) {
+      toast.warning('Pleas connect your wallet');
+      return;
+    }
     setStatus(STATE_STATUS.LOADING);
     try {
       const result = await deleteFavoriteToken(tokenId);
