@@ -43,7 +43,7 @@ export function TokenChart({ history }: { history: TokenPriceHistory }) {
 
     data.forEach(item => {
       const day = getDayOfWeek(item.created_at);
-      const price = parseFloat(item.price_per_native);
+      const price = parseFloat(item.price_per_native_in_usd);
       const date = formatDate(item.created_at);
       result.push({ day, price, date });
     });
@@ -62,7 +62,7 @@ export function TokenChart({ history }: { history: TokenPriceHistory }) {
             Current price
           </CardDescription>
           <CardTitle className="text-[1.375rem] font-bold tabular-nums text-foreground">
-            {formatPrice(history.currentPricePerNative)}
+            {formatPrice(history.currentPricePerNativeInUsd)}
           </CardTitle>
         </div>
       </CardHeader>

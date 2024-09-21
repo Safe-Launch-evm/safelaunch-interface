@@ -91,6 +91,7 @@ export type TokenLike = {
 export type TokenHistoryItem = {
   unique_id: string;
   price_per_native: string;
+  price_per_native_in_usd: string;
   token_id: string;
   created_at: string;
   token: {
@@ -101,5 +102,6 @@ export type TokenHistoryItem = {
 
 export type TokenPriceHistory = {
   currentPricePerNative: number;
+  currentPricePerNativeInUsd: number;
   history: TokenHistoryItem[];
 };

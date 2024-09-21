@@ -194,6 +194,7 @@ type TokenPriceHistoryResult = {
   code: number;
   result: {
     currentPricePerNative: number;
+    currentPricePerNativeInUsd:number;
     history: TokenHistoryItem[];
   };
 };
