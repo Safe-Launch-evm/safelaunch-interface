@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { type Connector, useAccount, useSignMessage } from 'wagmi';
+import { type Connector, useAccount } from 'wagmi';
 import { WalletModal, WalletModalContent } from '@/components/wallet/wallet-modal';
 import {
   Account,
@@ -10,7 +10,8 @@ import {
   WalletConnectors
 } from '@/components/wallet/wallet-connect';
 import { deleteCookieItem, getCookieStorage, setCookieStorage } from '@/lib/cookie-storage';
-import { AlertDialog } from '@/components/ui/alert-dialog';
+import { siteConfig } from '@/config/site-config';
+import { SwitchNetwork } from '@/components/wallet/switch-network';
 
 declare global {
   interface Window {
@@ -29,6 +30,8 @@ export const WalletContext = React.createContext<{
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openAuthDialog: boolean;
   setOpenAuthDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  switchChainDialog: boolean;
+  setSwitchChainDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }>({
   pendingConnector: null,
   setPendingConnector: () => null,
@@ -37,21 +40,19 @@ export const WalletContext = React.createContext<{
   open: false,
   setOpen: () => false,
   openAuthDialog: false,
-  setOpenAuthDialog: () => false
+  setOpenAuthDialog: () => false,
+  switchChainDialog: false,
+  setSwitchChainDialog: () => false
 });
 
 export default function WalletProvider(props: { children: React.ReactNode }) {
-  const { status, address } = useAccount();
+  const { status, address, chain } = useAccount();
   const [pendingConnector, setPendingConnector] = React.useState<Connector | null>(null);
   const [isConnectorError, setIsConnectorError] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [openAuthDialog, setOpenAuthDialog] = React.useState(false);
-  const [openUserDialog, setOpenUserDialog] = React.useState(false);
+  const [switchChainDialog, setSwitchChainDialog] = React.useState(false);
   const isConnected = address && !pendingConnector;
-
-  React.useEffect(() => {
-    if (address) setOpenAuthDialog(true);
-  }, [address]);
 
   React.useEffect(() => {
     if (status === 'connected' && pendingConnector) {
@@ -71,7 +72,7 @@ export default function WalletProvider(props: { children: React.ReactNode }) {
 
       return () => clearTimeout(timeout);
     }
-  }, [status, setOpen, pendingConnector, setPendingConnector]);
+  }, [status, setOpen, pendingConnector, setPendingConnector, address]);
 
   React.useEffect(() => {
     const checkAuthToken = async () => {
@@ -79,13 +80,15 @@ export default function WalletProvider(props: { children: React.ReactNode }) {
         const token = await getCookieStorage('auth_token');
         if (!token) {
           setOpenAuthDialog(true);
+        } else if (token && chain?.id !== siteConfig.chains.asset_chain) {
+          setSwitchChainDialog(true);
         }
       }
     };
     const timeoutId = setTimeout(checkAuthToken, 100);
 
     return () => clearTimeout(timeoutId);
-  }, [isConnected, setOpenAuthDialog]);
+  }, [isConnected, chain, setOpenAuthDialog, setSwitchChainDialog]);
 
   React.useEffect(() => {
     if (status === 'disconnected') {
@@ -105,7 +108,9 @@ export default function WalletProvider(props: { children: React.ReactNode }) {
         open,
         setOpen,
         openAuthDialog,
-        setOpenAuthDialog
+        setOpenAuthDialog,
+        switchChainDialog,
+        setSwitchChainDialog
       }}
     >
       {props.children}
@@ -117,6 +122,11 @@ export default function WalletProvider(props: { children: React.ReactNode }) {
       <WalletModal open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
         <WalletModalContent>
           <AuthSignMessage />
+        </WalletModalContent>
+      </WalletModal>
+      <WalletModal open={switchChainDialog} onOpenChange={setSwitchChainDialog}>
+        <WalletModalContent>
+          <SwitchNetwork />
         </WalletModalContent>
       </WalletModal>
     </WalletContext.Provider>
