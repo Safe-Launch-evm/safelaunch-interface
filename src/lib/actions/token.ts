@@ -2,8 +2,10 @@ import { Token, TokenHistoryItem, TokenLike, TokenPriceHistory } from '@/types';
 import client from '../client';
 import { getCookieStorage } from '../cookie-storage';
 import { CreateTokenInput } from '../validations/create-token-schema';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function uploadLogo(data: FormData) {
+  noStore();
   try {
     const res = await fetch('/api/upload', {
       method: 'POST',
@@ -16,6 +18,7 @@ export async function uploadLogo(data: FormData) {
 }
 
 export async function createToken(data: CreateTokenInput) {
+  noStore();
   try {
     const token = await getCookieStorage('auth_token');
 
@@ -91,6 +94,7 @@ export async function fetchTokens({
   trending?: boolean;
   favorites?: boolean;
 } = {}): Promise<TokenResult> {
+  noStore();
   try {
     const token = await getCookieStorage('auth_token');
     const queryParams = new URLSearchParams();
@@ -125,6 +129,7 @@ export async function fetchTokens({
 }
 
 export async function fetchSingleToken(tokenId: string): Promise<Token | null> {
+  noStore();
   try {
     const token: any = await client(`/tokens/${tokenId}`, {
       tag: 'tokens'
@@ -141,6 +146,7 @@ export async function fetchSingleToken(tokenId: string): Promise<Token | null> {
 }
 
 export async function fetchTokenStats(tokenId: string): Promise<any | null> {
+  noStore();
   try {
     const token: any = await client(`/token/stats/${tokenId}`, {
       tag: 'stats'
@@ -157,6 +163,7 @@ export async function fetchTokenStats(tokenId: string): Promise<any | null> {
 }
 
 export async function favoriteToken(tokenId: string) {
+  noStore();
   try {
     const token = await getCookieStorage('auth_token');
     const result = await client('/token/favorite', { token, formData: { tokenId } });
@@ -167,6 +174,7 @@ export async function favoriteToken(tokenId: string) {
 }
 
 export async function deleteFavoriteToken(tokenId: string) {
+  noStore();
   try {
     const origin = process.env.NEXT_PUBLIC_APP_CLIENT ?? '';
     const token = await getCookieStorage('auth_token');
@@ -201,6 +209,7 @@ type TokenPriceHistoryResult = {
 export async function fetchTokenPriceHistory(
   tokenId: string
 ): Promise<TokenPriceHistory | null> {
+  noStore();
   try {
     const token: TokenPriceHistoryResult = await client(`/token/price-history/${tokenId}`, {
       tag: 'history'
