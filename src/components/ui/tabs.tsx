@@ -13,7 +13,7 @@ const tabListVariants = cva('', {
   variants: {
     variant: {
       default: 'inline-flex items-center justify-start',
-      pill: 'flex w-full justify-center items-center border rounded-lg',
+      pill: 'flex w-full items-center justify-center rounded-lg border',
       secondary:
         'flex items-center justify-center gap-4 rounded-lg border border-card-foreground bg-card p-2'
     }
@@ -42,10 +42,10 @@ const tabTriggerVariants = cva('disabled:pointer-events-none disabled:opacity-50
   variants: {
     variant: {
       default:
-        'border-b border-card-foreground flex items-start justify-center  p-3 text-[1rem] font-inter text-muted data-[state=active]:border-primary data-[state=active]:text-primary',
-      pill: 'flex items-center w-full lg:min-w-[190px] h-full text-[#3E3E3E] justify-center p-3 gap-2 rounded-lg text-[1.25rem] lg:text-[1.5rem] font-bold data-[state=active]:text-foreground/[0.8] data-[state=active]:bg-secondary',
+        'flex items-start justify-center border-b border-card-foreground  p-3 font-inter text-[1rem] text-muted data-[state=active]:border-primary data-[state=active]:text-primary',
+      pill: 'flex size-full items-center justify-center gap-2 rounded-lg p-3 text-[1.25rem] font-bold text-[#3E3E3E] data-[state=active]:bg-secondary data-[state=active]:text-foreground/[0.8] lg:text-[1.5rem]',
       secondary:
-        'flex items-center lg:h-[36px] h-6 p-2 lg:p-3 font-medium font-inter text-[1rem] rounded border w-full justify-center py-2 px-3 gap-2 border-card/[0.20] data-[state=active]:text-primary data-[state=active]:border-primary'
+        'flex h-6 w-full items-center justify-center gap-2 rounded border border-card/[0.20] p-2 px-3 font-inter text-[1rem] font-medium data-[state=active]:border-primary data-[state=active]:text-primary lg:h-[36px] lg:p-3'
     }
   },
   defaultVariants: {

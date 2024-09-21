@@ -10,7 +10,7 @@ type CommentProps = {
 
 export default function Comment({ ...item }: CommentProps) {
   return (
-    <div className="flex flex-col items-start gap-4 self-stretch rounded border border-card-foreground bg-card p-4">
+    <div className="flex w-full flex-col items-start gap-4 self-stretch rounded border border-card-foreground bg-card p-2 lg:p-4">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
           <Image
@@ -36,7 +36,9 @@ export default function Comment({ ...item }: CommentProps) {
           </div>
         </div> */}
       </div>
-      <p className="font-medium text-muted">{item.comment}</p>
+      <p className="hyphens-auto text-pretty break-all font-medium text-muted">
+        {item.comment}
+      </p>
     </div>
   );
 }
