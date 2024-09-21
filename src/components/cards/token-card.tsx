@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { STATE_STATUS } from '@/types';
 import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
 import { toast } from 'sonner';
+import { getCookieStorage } from '@/lib/cookie-storage';
 
 type TokenCardProps = {
   unique_id: string;
@@ -28,7 +29,15 @@ export default function TokenCard({ ...token }: TokenCardProps) {
   const [status, setStatus] = useState(STATE_STATUS.IDLE);
 
   async function addToFavorite() {
+    const isAuth = await getCookieStorage('auth_token');
+
+    if (!isAuth) {
+      toast.warning('Pleas connect your wallet');
+      return;
+    }
+
     setStatus(STATE_STATUS.LOADING);
+
     try {
       const result = await favoriteToken(token.unique_id);
       if (result.code !== 200) {
@@ -50,6 +59,12 @@ export default function TokenCard({ ...token }: TokenCardProps) {
     }
   }
   async function removeFromFavorite() {
+    const isAuth = await getCookieStorage('auth_token');
+
+    if (!isAuth) {
+      toast.warning('Pleas connect your wallet');
+      return;
+    }
     setStatus(STATE_STATUS.LOADING);
     try {
       const result = await deleteFavoriteToken(token.unique_id);
@@ -124,7 +139,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
         </div>
         {token.user ? (
           <button
-            className="flex size-[34px] items-center justify-center rounded-lg border bg-primary"
+            className="flex size-[34px] items-center justify-center rounded-lg border bg-primary text-primary-foreground hover:text-primary-foreground hover:shadow-dip"
             disabled={status === STATE_STATUS.LOADING}
             onClick={removeFromFavorite}
           >
@@ -137,7 +152,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
         ) : (
           <button
             type="button"
-            className="flex size-[34px] items-center justify-center rounded-lg border"
+            className="flex size-[34px] items-center justify-center rounded-lg border hover:bg-primary hover:text-primary-foreground hover:shadow-dip"
             disabled={status === STATE_STATUS.LOADING}
             onClick={addToFavorite}
           >

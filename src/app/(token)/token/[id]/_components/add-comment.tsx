@@ -83,7 +83,7 @@ export default function AddComment() {
   return (
     <div className="w-full pt-6">
       <Form form={form} onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="relative flex w-full flex-col gap-4 rounded-lg border bg-input p-3 focus-within:ring-1 focus-within:ring-ring">
+        <div className="relative flex w-full flex-col gap-4 rounded-lg border bg-input p-2 focus-within:ring-1 focus-within:ring-ring">
           <Textarea
             id="message"
             placeholder="Type your message here..."

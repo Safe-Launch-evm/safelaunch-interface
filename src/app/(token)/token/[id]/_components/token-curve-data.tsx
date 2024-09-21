@@ -8,8 +8,6 @@ function calcCurvePercent(currentLiquidity: number, targetLiquidity: number): nu
 }
 
 export function TokenCurveData({ token, data }: { token: Token; data: any }) {
-  // const data = await fetchTokenStats(token.unique_id);
-
   return (
     <div className="flex flex-col gap-4 rounded border border-card-foreground bg-card p-4">
       <h2 className="text-[1.25rem]/[0.0125rem] font-bold">Bonding curve</h2>

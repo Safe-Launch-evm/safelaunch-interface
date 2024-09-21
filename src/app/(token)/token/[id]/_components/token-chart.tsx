@@ -1,50 +1,39 @@
 'use client';
 
-import { TrendingDown, TrendingUp } from 'lucide-react';
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, Tooltip, TooltipProps, XAxis, YAxis } from 'recharts';
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent
-} from '@/components/ui/chart';
+import { ChartContainer } from '@/components/ui/chart';
 import { TokenHistoryItem, TokenPriceHistory } from '@/types';
-import { formatDate, formatPrice, getDayOfWeek } from '@/lib/utils';
+import { formatDate, formatPrice, getDayOfWeek, toIntNumberFormat } from '@/lib/utils';
 
-export const description = 'An area chart with icons';
+import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
 
-// const chartData = [
-//   { day: 'January', desktop: 186, mobile: 80 },
-//   { day: 'February', desktop: 305, mobile: 200 },
-//   { day: 'March', desktop: 237, mobile: 120 },
-//   { day: 'April', desktop: 73, mobile: 190 },
-//   { day: 'May', desktop: 209, mobile: 130 },
-//   { day: 'June', desktop: 214, mobile: 140 }
-// ];
-
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'hsl(var(--chart-1))',
-    icon: TrendingDown
-  },
-  mobile: {
-    label: 'Mobile',
-    color: 'hsl(var(--chart-2))',
-    icon: TrendingUp
+const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
+  if (!active || !payload || payload.length === 0) {
+    return null;
   }
-} satisfies ChartConfig;
+
+  const value = payload[0].payload;
+  return (
+    <div className="flex flex-col items-start gap-0.5 rounded-md border bg-card p-2 text-foreground">
+      <div className="flex w-full items-center justify-between gap-10 text-xs font-medium uppercase">
+        <span>{value.created_at}</span>
+        {/* <span>{time}</span> */}
+      </div>
+
+      <p className="text-xl font-semibold tracking-[-0.72px]">
+        <span>{formatPrice(value.price)}</span>
+      </p>
+    </div>
+  );
+};
 
 export function TokenChart({ history }: { history: TokenPriceHistory }) {
   type ResultData = { day: string; price: any; date: string };
@@ -64,28 +53,26 @@ export function TokenChart({ history }: { history: TokenPriceHistory }) {
   const chartData = processData(history.history);
 
   return (
-    <Card className="border-0 bg-card-foreground">
-      {/* <CardHeader className="space-y-0 pb-0">
-        <CardDescription>Time in Bed</CardDescription>
-        <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-          8
-          <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-            hr
-          </span>
-          35
-          <span className="font-sans text-sm font-normal tracking-normal text-muted-foreground">
-            min
-          </span>
-        </CardTitle>
-      </CardHeader> */}
-      <CardContent className="p-4">
+    <Card className="size-full border-[#D9D9D9] shadow-none">
+      <CardHeader className="flex flex-row justify-between pb-4">
+        <div className="flex items-center gap-1">
+          <CardDescription className="text-[1.125rem]/[0.01125rem] text-foreground">
+            Current price
+          </CardDescription>
+          <CardTitle className="text-[1.375rem] font-bold tabular-nums text-foreground">
+            {formatPrice(history.currentPricePerNative)}
+          </CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="mt-4 p-0 pt-6">
         <ChartContainer
           config={{
-            time: {
+            price: {
               label: 'Price',
-              color: 'hsl(var(--chart-2))'
+              color: 'hsl(var(--chart-1))'
             }
           }}
+          className="aspect-auto h-[300px] w-full"
         >
           <AreaChart
             accessibilityLayer
@@ -99,43 +86,44 @@ export function TokenChart({ history }: { history: TokenPriceHistory }) {
             stackOffset="expand"
           >
             {/* <CartesianGrid vertical={false} /> */}
-            <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
-            <YAxis
-              tickFormatter={value => `${parseFloat(value)}`}
+            <XAxis
+              dataKey="day"
+              tick={{ fill: 'rgba(111, 118, 126, 0.75)', fontSize: 12 }}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
             />
-            {/* <YAxis
-              domain={[`dataMin - ${chartData[0]}`, `dataMax + ${chartData.length - 1}`]}
-            /> */}
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              orientation="right"
+              tickFormatter={value => formatPrice(value)}
+            />
             <defs>
-              <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-time)" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="var(--color-time)" stopOpacity={0.1} />
+              <linearGradient id="fillPrice" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--color-price)" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="var(--color-price)" stopOpacity={0.1} />
               </linearGradient>
             </defs>
             <Area
               dataKey="price"
-              type="natural"
-              fill="url(#fillTime)"
+              type="monotone"
+              fill="url(#fillPrice)"
               fillOpacity={0.4}
               stroke="var(--color-price)"
+              // strokeWidth={2}
+              // clipPath="none"
+              // activeDot={{ r: 6.5, stroke: '#fff', strokeWidth: 3 }}
             />
-            <ChartTooltip
+            <Tooltip content={<CustomTooltip />} />
+            {/* <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
               formatter={value => (
                 <div>${value}</div>
-                // <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
-                //   Time in bed
-                //   <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                //     {value}
-                //     <span className="font-normal text-muted-foreground">hr</span>
-                //   </div>
-                // </div>
+         
               )}
-            />
+            /> */}
           </AreaChart>
         </ChartContainer>
       </CardContent>
