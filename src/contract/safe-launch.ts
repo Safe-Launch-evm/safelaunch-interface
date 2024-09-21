@@ -1,11 +1,9 @@
 import SafeLaunchAbi from './abi/SafeLaunch.json';
 import TokenAbi from './abi/Token.json';
 import {
-  AbiEvent,
   Hex,
   WalletClient,
   createPublicClient,
-  createWalletClient,
   getContract,
   http,
   parseUnits,
@@ -21,9 +19,6 @@ import {
   getTokenSupplyInPool,
   getWRWASupplyInPool
 } from './utils';
-import { privateKeyToAccount } from 'viem/accounts';
-// import dotenv from 'dotenv';
-// dotenv.config()
 
 export default class SafeLaunch {
   contract;

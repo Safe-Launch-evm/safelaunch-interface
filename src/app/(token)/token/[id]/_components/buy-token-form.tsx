@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import SafeLaunch from '@/contract/safe-launch';
 import { SwapTokenInput, swapTokenSchema } from '@/lib/validations/swap-token-schema';
 // import { useFormik } from 'formik';
@@ -10,18 +9,22 @@ import { STATE_STATUS, Token } from '@/types';
 import { ArrowBigDown, LoaderCircle } from 'lucide-react';
 import Image from 'next/image';
 import { assetChainTestnet } from 'viem/chains';
-import { useAccount, useWalletClient } from 'wagmi';
+import { useAccount, useBalance, useWalletClient } from 'wagmi';
 import { createWalletClient, custom } from 'viem';
 import { toast } from 'sonner';
 import NumberInput from '@/components/number-input';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toIntNumberFormat } from '@/lib/utils';
 
 export function BuyTokenForm({ token }: { token: Token }) {
   const router = useRouter();
   const { address, isConnected } = useAccount();
+  const rwaBalance = useBalance({ address });
+  console.log({ rwaBalance });
   const [status, setStatus] = useState<STATE_STATUS>(STATE_STATUS.IDLE);
   const [walletClient, setWalletClient] = useState<any>();
+
   useEffect(() => {
     if (!window.ethereum) {
       console.error('Install browser wallet.');
@@ -116,7 +119,9 @@ export function BuyTokenForm({ token }: { token: Token }) {
               <span className="text-[1rem]">RWA</span>{' '}
             </div>
           </div>
-          <span className="flex font-inter text-[1rem] text-primary">Set max slippage</span>
+          <span className="flex font-inter text-[1rem] text-primary">
+            {`RWA Balance: ${toIntNumberFormat(Number(rwaBalance?.data?.formatted))}`}
+          </span>
         </div>
         <NumberInput
           thousandSeparator=","

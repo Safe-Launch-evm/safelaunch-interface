@@ -1,5 +1,4 @@
 'use client';
-import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
 import { useEffect, useState } from 'react';
@@ -14,6 +13,8 @@ import { Hex, createWalletClient, custom } from 'viem';
 import { toast } from 'sonner';
 import NumberInput from '@/components/number-input';
 import { useRouter } from 'next/navigation';
+import { getTokenBalance } from '@/contract/utils';
+import { toIntNumberFormat } from '@/lib/utils';
 
 export function SellTokenForm({ token }: { token: Token }) {
   const router = useRouter();
@@ -21,6 +22,7 @@ export function SellTokenForm({ token }: { token: Token }) {
   const [status, setStatus] = useState<STATE_STATUS>(STATE_STATUS.IDLE);
 
   const [walletClient, setWalletClient] = useState<any>();
+  const [tokenBalance, setTokenBalance] = useState<any>();
 
   // const walletClient = createWalletClient({
   //   account: address,
@@ -39,6 +41,13 @@ export function SellTokenForm({ token }: { token: Token }) {
       transport: window && custom(window?.ethereum!)
     });
     setWalletClient(client);
+
+    const getData = async () => {
+      const bal = await getTokenBalance(token.contract_address, address as Hex);
+      setTokenBalance(bal);
+    };
+
+    getData();
   }, []);
 
   const form = useZodForm({
@@ -117,7 +126,9 @@ export function SellTokenForm({ token }: { token: Token }) {
               <span className="text-[1rem]">{token?.symbol}</span>{' '}
             </div>
           </div>
-          <span className="flex font-inter text-[1rem] text-primary">Set max slippage</span>
+          <span className="flex font-inter text-[1rem] text-primary">
+             {tokenBalance && `Balance: ${toIntNumberFormat(Number(tokenBalance))}`}
+          </span>
         </div>
         <NumberInput
           thousandSeparator=","

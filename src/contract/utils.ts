@@ -1,7 +1,8 @@
-import { AbiEvent, Hex, PublicClient, formatEther, formatUnits, getContract } from 'viem';
+import { AbiEvent, Hex, PublicClient, createPublicClient, formatEther, formatUnits, getContract, http } from 'viem';
 import UniswapV3FactoryAbi from './abi/UniswapV3Factory.json';
 import UniswapV3PoolAbi from './abi/UniswapV3Pool.json';
 import TokenAbi from './abi/Token.json';
+import { assetChainTestnet } from 'viem/chains';
 
 export const FACTORY_ADDRESS = '0xf509c3FbbBa099cD5D949C6621C218B3E52670F8';
 export const WRWA_ADDRESS = '0x0FA7527F1050bb9F9736828B689c652AB2c483ef';
@@ -67,6 +68,24 @@ export async function getTokenSupplyInPool(publicClient: PublicClient, tokenAddr
   // console.log({ balance: formatUnits(BigInt(Number(balance)), 18) })
   return formatUnits(BigInt(Number(balance)), 18);
 }
+
+export async function getTokenBalance(tokenAddress: string, userAddress: string) {
+
+  const publicClient = createPublicClient({
+    chain: assetChainTestnet,
+    transport: http(RPC_URL)
+  });
+
+  const balance = await publicClient.readContract({
+    address: tokenAddress as Hex,
+    abi: TokenAbi,
+    functionName: 'balanceOf',
+    args: [userAddress]
+  });
+console.log({balance})
+  return formatUnits(BigInt(Number(balance)), 18);
+}
+
 
 export async function getWRWASupplyInPool(publicClient: PublicClient, tokenAddress: string) {
   let poolAddress = await getPoolAddress(publicClient, tokenAddress);
