@@ -60,6 +60,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
 
   const data = await fetchTokenStats(token.unique_id);
   const priceHistory = await fetchTokenPriceHistory(token.unique_id);
+  // console.log({priceHistory})
   const { favorites } = await fetchTokens({ favorites: true });
 
   return (

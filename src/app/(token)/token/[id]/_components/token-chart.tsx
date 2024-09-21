@@ -37,6 +37,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameT
 
 export function TokenChart({ history }: { history: TokenPriceHistory }) {
   type ResultData = { day: string; price: any; date: string };
+
   const processData = (data: TokenHistoryItem[]) => {
     let result: ResultData[] = [];
 
@@ -51,6 +52,7 @@ export function TokenChart({ history }: { history: TokenPriceHistory }) {
   };
 
   const chartData = processData(history.history);
+  // console.log({xx:chartData})
 
   return (
     <Card className="size-full border-[#D9D9D9] shadow-none">

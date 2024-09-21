@@ -27,10 +27,10 @@ export function TokenCurveData({ token, data }: { token: Token; data: any }) {
         <HighlightText value={token?.symbol} /> available for sale through the bonding curve,
         with the current balance of{' '}
         <HighlightText
-          value={toIntNumberFormat(Number(data?.curveStats?.currentRwaLiquidity))}
+          value={`${toIntNumberFormat(Number(data?.curveStats?.currentRwaLiquidity))} RWA`}
         />{' '}
-        RWA in the curve. As the market cap progresses and reaches{' '}
-        <HighlightText value={data?.curveStats?.targetRwaLiquidity} /> RWA, the entire LP
+        in the curve. As the market cap progresses and reaches{' '}
+        <HighlightText value={`${data?.curveStats?.targetRwaLiquidity} RWA`} /> , the entire LP
         tokens in the bonding curve will be burned, providing a base liquidity for{' '}
         <HighlightText value={token?.symbol} /> tokens in future.
       </p>

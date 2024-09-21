@@ -205,6 +205,7 @@ export async function fetchTokenPriceHistory(
     const token: TokenPriceHistoryResult = await client(`/token/price-history/${tokenId}`, {
       tag: 'history'
     });
+    // console.log('ccc', token)
     const result = token.result;
     if (!result) {
       return null;

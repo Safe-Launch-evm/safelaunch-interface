@@ -50,6 +50,10 @@ export default function WalletProvider(props: { children: React.ReactNode }) {
   const isConnected = address && !pendingConnector;
 
   React.useEffect(() => {
+    if (address) setOpenAuthDialog(true);
+  }, [address]);
+
+  React.useEffect(() => {
     if (status === 'connected' && pendingConnector) {
       const checkAuthToken = async () => {
         const token = await getCookieStorage('auth_token');

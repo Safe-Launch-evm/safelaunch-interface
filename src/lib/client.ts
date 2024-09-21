@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 type DataProps = {
   token?: string | undefined;
   formData?: any;
@@ -11,6 +13,7 @@ export default async function client(url: string, data: DataProps) {
   const origin = process.env.NEXT_PUBLIC_APP_CLIENT ?? '';
 
   const res = await fetch(`${BASE_URL}${url}`, {
+    // cache: 'no-store',
     method: formData ? 'POST' : 'GET',
     next: { tags: [`${tag}`] },
     headers: {
@@ -21,5 +24,14 @@ export default async function client(url: string, data: DataProps) {
     },
     body: JSON.stringify(formData)
   });
+  // console.log({ res: await res.json() })
+  // const result = await res.json()
+
+  // if (String(result.data).includes("E_INVALID_API_TOKEN")) {
+  //   console.log('mamam')
+  //   toast.error('Opps!', { description: 'Please connect your wallet.' });
+  //   return;
+  // }
+
   return res.json();
 }

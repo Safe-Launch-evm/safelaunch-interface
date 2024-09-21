@@ -122,7 +122,7 @@ export const CreateTokenFrom = () => {
               {imageSrc ? (
                 <Image
                   src={imageSrc.url}
-                  alt="pre image uplod"
+                  alt="pre image upload"
                   width={64}
                   height={64}
                   className="size-[64px] rounded-lg bg-cover bg-center bg-no-repeat"
@@ -246,7 +246,7 @@ export const CreateTokenFrom = () => {
 
         setStatus(STATE_STATUS.SUCCESS);
       } catch (error: any) {
-        // console.log({ error });
+        console.log({ error });
         setComponent(0);
         setStatus(STATE_STATUS.ERROR);
         toast.error('Opps!', { description: error?.messsage ?? 'An error occurred' });
