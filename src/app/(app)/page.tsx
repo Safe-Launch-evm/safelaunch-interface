@@ -5,7 +5,7 @@ import Banner from './_components/banner';
 import TokenCard from '@/components/cards/token-card';
 import { getCookieStorage } from '@/lib/cookie-storage';
 import { fetchTokens } from '@/lib/actions/token';
-import { formatAddress } from '@/lib/utils';
+import { formatAddress, toIntNumberFormat } from '@/lib/utils';
 import TokenToolbar from './token-toolbar';
 
 type HomeProps = {
@@ -93,7 +93,7 @@ export default async function Home({ searchParams }: HomeProps) {
                           ? token.creator.username
                           : formatAddress(token.creator.wallet_address)
                       }
-                      market_cap={22.8}
+                      market_cap={toIntNumberFormat(token?.stats?.marketStats?.marketcapInUsd)}
                     />
                   );
                 })
@@ -104,18 +104,18 @@ export default async function Home({ searchParams }: HomeProps) {
           ) : null}
           {likes !== null ? (
             <>
-              {likes.length >= 1 ? (
-                likes.map(favorite => {
+              {likes?.length >= 1 ? (
+                likes?.map(favorite => {
                   return (
                     <TokenCard
-                      key={favorite.unique_id}
-                      unique_id={favorite.token_id}
-                      name={favorite.token.name}
-                      symbol={favorite.token.symbol}
-                      image={favorite.token.logo_url}
-                      creator_unique_id={favorite.token.creator_id}
-                      user={favorite.user}
-                      market_cap={22.8}
+                      key={favorite?.unique_id}
+                      unique_id={favorite?.token_id}
+                      name={favorite?.token.name}
+                      symbol={favorite?.token.symbol}
+                      image={favorite?.token.logo_url}
+                      creator_unique_id={favorite?.token.creator_id}
+                      user={favorite?.user}
+                      market_cap={0}
                     />
                   );
                 })

@@ -12,6 +12,8 @@ import { STATE_STATUS } from '@/types';
 import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
 import { toast } from 'sonner';
 import { Progress } from '../ui/progress';
+import { calcCurvePercent } from '@/app/(token)/token/[id]/_components/token-curve-data';
+// import { calcCurvePercent } from '@/app/(token)/token/[id]/_components/token-curve-data';
 
 type TokenCardProps = {
   unique_id: string;
@@ -19,15 +21,16 @@ type TokenCardProps = {
   symbol: string;
   image: string;
   owner?: string;
-  market_cap: number;
+  market_cap?: any;
   user?: object;
   creator_unique_id?: string;
+  curve_stats?: any;
+  market_stats?: any;
 };
 
 export default function OwnedTokenCard({ ...token }: TokenCardProps) {
   const router = useRouter();
   const [status, setStatus] = useState(STATE_STATUS.IDLE);
-
   async function addToFavorite() {
     setStatus(STATE_STATUS.LOADING);
     try {
@@ -100,28 +103,33 @@ export default function OwnedTokenCard({ ...token }: TokenCardProps) {
       /> */}
       <div className="flex h-full w-full items-center justify-between">
         <div className="flex h-full flex-col gap-1">
-          <dt className="text-ellipsis font-bold">
+          <dt className="text-ellipsis font-bold first-letter:capitalize">
             <Link href={`/token/${token.unique_id}`}>{truncate(token.name, 14)}</Link>
 
             {/* {token.name} */}
           </dt>
-          <dd className="text-sm font-light text-muted">
+          {/* <dd className="text-sm font-light text-muted">
             Created by{' '}
             <Link
               href={`/profile/${token.creator_unique_id}`}
               className="text-primary underline-offset-4 hover:underline"
             >
-              {token.owner ?? 'view'}
+              {token.owner}
             </Link>
-          </dd>
+          </dd> */}
         </div>
         <span className="flex items-center justify-center rounded bg-primary px-1 py-[2px] text-[0.5rem] text-white lg:text-[0.875rem]">
           ${token.symbol}
         </span>
       </div>
-      <Progress value={60} />
+      <Progress
+        value={calcCurvePercent(
+          Number(token?.curve_stats?.currentRwaLiquidity),
+          token?.curve_stats?.targetRwaLiquidity
+        )}
+      />
       <span className="text-[0.875rem]/[0.00875rem] font-light">
-        Market cap: <span className="text-[#6100FF]">{token.market_cap}</span>
+        Market cap: <span className="text-[#6100FF]">$ {token.market_cap}</span>
       </span>
     </div>
   );

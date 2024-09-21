@@ -9,7 +9,7 @@ const socialLinksSchema = z.object({
 
 export const createTokenSchema = z.object({
   name: z.string().min(1, { message: 'Provide a name for token' }),
-  symbol: z.string().min(1, { message: 'Provide a symbol for token' }),
+  symbol: z.string().min(1, { message: 'Provide a symbol for token' }).max(4, { message: 'Symbol can\'t be more than 4 characters' }),
   liquidityAmount: z.string().optional(),
   totalSupply: z.string().optional(),
   image: z.any(),

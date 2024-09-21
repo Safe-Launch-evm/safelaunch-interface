@@ -22,6 +22,17 @@ export async function getUser({ address }: { address: string }): Promise<UserTyp
     return null;
   }
 }
+export async function getUserById(userId: string ): Promise<UserType | null> {
+  try {
+    const user: UserResponse = await client(`/user/${userId}`, { tag: 'user' });
+    if (user.code !== 200) {
+      return null;
+    }
+    return user.result[0];
+  } catch (error) {
+    return null;
+  }
+}
 
 export async function registerUser(data: ProfileInput) {
   try {

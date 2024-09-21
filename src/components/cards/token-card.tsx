@@ -18,7 +18,7 @@ type TokenCardProps = {
   symbol: string;
   image: string;
   owner?: string;
-  market_cap: number;
+  market_cap: any;
   user?: object;
   creator_unique_id: string;
 };
@@ -74,12 +74,12 @@ export default function TokenCard({ ...token }: TokenCardProps) {
 
   return (
     <div className="flex w-full min-w-full flex-col items-start gap-4 rounded-lg border border-card-foreground bg-card p-2 lg:min-w-[240px] lg:p-4">
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between text-wrap">
         <dd className="flex items-center justify-center rounded bg-primary px-1 py-[2px] text-[0.5rem] text-white lg:text-[0.875rem]">
           ${token.symbol}
         </dd>
         <dd className="text-[0.875rem]/[0.00875rem] font-light">
-          {/* Market cap: <span className="text-[#6100FF]">{token.market_cap}</span> */}
+          Market cap: <span className="text-[#6100FF]">$ {token.market_cap}</span>
         </dd>
       </div>
       <AspectRatio ratio={2 / 1.5}>

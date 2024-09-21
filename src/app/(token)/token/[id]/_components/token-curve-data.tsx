@@ -3,8 +3,8 @@ import { Token } from '@/types';
 import { toIntNumberFormat } from '@/lib/utils';
 // import { fetchTokenStats } from '@/lib/actions/token';
 
-function calcCurvePercent(currentLiquidity: number, targetLiquidity: number): number {
-  return (currentLiquidity * 100) / targetLiquidity;
+export function calcCurvePercent(currentLiquidity: number, targetLiquidity: number): number {
+  return Number((currentLiquidity * 100) / targetLiquidity);
 }
 
 export function TokenCurveData({ token, data }: { token: Token; data: any }) {

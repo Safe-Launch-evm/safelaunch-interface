@@ -33,10 +33,10 @@ export async function generateMetadata({
           url: token?.logo_url as string
         }
       ],
-      description: `trade $${token?.symbol} on safelaunch`,
+      description: `Trade $${token?.symbol} on safelaunch`,
       type: 'website',
       title: `SafeLaunch ~ ${token?.name}`,
-      siteName: 'launchbox-interface.vercel.app',
+      siteName: 'safelaunch-interface.vercel.app',
       url: `${process.env.NEXT_PUBLIC_APP_CLIENT}/token/${token?.contract_address}`
     },
     twitter: {
@@ -45,7 +45,7 @@ export async function generateMetadata({
           url: token?.logo_url as string
         }
       ],
-      description: `trade $${token?.symbol} on safelaunch`,
+      description: `Trade $${token?.symbol} on safelaunch`,
       title: `Safelaunch ~ ${token?.name}`,
       site: `${process.env.NEXT_PUBLIC_APP_CLIENT}`,
       card: 'summary_large_image'

@@ -233,7 +233,7 @@ export const CreateTokenFrom = () => {
 
         if (!reciept?.ok) throw new Error(reciept.data);
 
-        console.log('{error}', address, isConnected, reciept);
+        // console.log('{error}', address, isConnected, reciept);
         data.contractAddress = reciept.data.log.args.token;
 
         const result = await createToken(data);
@@ -246,7 +246,7 @@ export const CreateTokenFrom = () => {
 
         setStatus(STATE_STATUS.SUCCESS);
       } catch (error: any) {
-        console.log({ error });
+        // console.log({ error });
         setComponent(0);
         setStatus(STATE_STATUS.ERROR);
         toast.error('Opps!', { description: error?.messsage ?? 'An error occurred' });

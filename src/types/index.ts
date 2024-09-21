@@ -21,6 +21,18 @@ export type Token = {
     username: string | null;
     wallet_address: string;
   };
+  stats: {
+    marketStats: {
+      "priceInUsd": number,
+      "circulatingSupplyInToken": number,
+      "marketcapInUsd": number,
+      "liquidityInUsd": number
+    },
+    curveStats: {
+      "targetRwaLiquidity": number,
+      "currentRwaLiquidity": string
+    }
+  };
   created_at: string;
   updated_at: string;
 };
