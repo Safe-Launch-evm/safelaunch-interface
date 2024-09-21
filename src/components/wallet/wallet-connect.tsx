@@ -451,7 +451,7 @@ function RegisterUserForm() {
         toast.error('Opps!', { description: 'An error occurred' });
         return;
       }
-      toast.error('Success', { description: 'User profile updated' });
+      toast.success('Success', { description: 'User profile updated' });
       setStatus(STATE_STATUS.SUCCESS);
       context.setOpenAuthDialog(false);
     } catch (error) {
