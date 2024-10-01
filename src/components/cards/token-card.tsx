@@ -89,7 +89,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
 
   return (
     <div className="flex w-full min-w-full flex-col items-start gap-4 rounded-lg border border-card-foreground bg-card p-2 lg:min-w-[240px] lg:p-4">
-      <div className="flex w-full items-center justify-between text-wrap">
+      <div className="flex w-full flex-col items-start justify-start gap-2 text-wrap lg:flex-row lg:items-center lg:justify-between">
         <dd className="flex items-center justify-center rounded bg-primary px-1 py-[2px] text-[0.5rem] text-white lg:text-[0.875rem]">
           ${token.symbol}
         </dd>
