@@ -1,3 +1,5 @@
+'use client';
+
 import type { Metadata } from 'next';
 import { Shell } from '@/components/shell';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,51 +19,102 @@ import { TokenCurveData, TokenStats } from './_components/token-curve-data';
 import TokenHeader from './_components/token-header';
 import TokenDescription, { TokenSocial } from './_components/token-description';
 import { TokenChart } from './_components/token-chart';
+import { useQuery } from '@tanstack/react-query';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export async function generateMetadata({
-  params
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  // fetch data
-  const token = await fetchSingleToken(params.id);
-  return {
-    title: token?.name,
-    openGraph: {
-      images: [
-        {
-          url: token?.logo_url as string
-        }
-      ],
-      description: `Trade $${token?.symbol} on safelaunch`,
-      type: 'website',
-      title: `SafeLaunch ~ ${token?.name}`,
-      siteName: 'safelaunch-interface.vercel.app',
-      url: `${process.env.NEXT_PUBLIC_APP_CLIENT}/token/${token?.contract_address}`
-    },
-    twitter: {
-      images: [
-        {
-          url: token?.logo_url as string
-        }
-      ],
-      description: `Trade $${token?.symbol} on safelaunch`,
-      title: `Safelaunch ~ ${token?.name}`,
-      site: `${process.env.NEXT_PUBLIC_APP_CLIENT}`,
-      card: 'summary_large_image'
-    }
-  };
-}
+// export async function generateMetadata({
+//   params
+// }: {
+//   params: { id: string };
+// }): Promise<Metadata> {
+//   // fetch data
+//   const token = await fetchSingleToken(params.id);
+//   return {
+//     title: token?.name,
+//     openGraph: {
+//       images: [
+//         {
+//           url: token?.logo_url as string
+//         }
+//       ],
+//       description: `Trade $${token?.symbol} on safelaunch`,
+//       type: 'website',
+//       title: `SafeLaunch ~ ${token?.name}`,
+//       siteName: 'safelaunch-interface.vercel.app',
+//       url: `${process.env.NEXT_PUBLIC_APP_CLIENT}/token/${token?.contract_address}`
+//     },
+//     twitter: {
+//       images: [
+//         {
+//           url: token?.logo_url as string
+//         }
+//       ],
+//       description: `Trade $${token?.symbol} on safelaunch`,
+//       title: `Safelaunch ~ ${token?.name}`,
+//       site: `${process.env.NEXT_PUBLIC_APP_CLIENT}`,
+//       card: 'summary_large_image'
+//     }
+//   };
+// }
 
-export default async function TokenPage({ params }: { params: { id: string } }) {
-  const token = await fetchSingleToken(params.id);
-  const comments = await fetchTokenComments(params.id);
-  if (!token) return;
-
-  const data = await fetchTokenStats(token.unique_id);
-  const priceHistory = await fetchTokenPriceHistory(token.unique_id);
+export default function TokenPage({ params }: { params: { id: string } }) {
+  // const token = await fetchSingleToken(params.id);
+  // const comments = await fetchTokenComments(params.id);
+  // const data = await fetchTokenStats(token.unique_id);
+  // const priceHistory = await fetchTokenPriceHistory(token.unique_id);
   // console.log({priceHistory})
-  const { favorites } = await fetchTokens({ favorites: true });
+  // const { favorites } = await fetchTokens({ favorites: true });
+
+  const { data: token, isLoading } = useQuery({
+    queryFn: () => fetchSingleToken(params.id),
+    queryKey: ['token']
+  });
+  const { data: comments, isLoading: isCommentsLoading } = useQuery({
+    queryFn: () => fetchTokenComments(params.id),
+    queryKey: ['comments']
+  });
+
+  const { data } = useQuery({
+    queryFn: () => fetchTokenStats(token?.unique_id ?? ''),
+    queryKey: ['userTokens']
+  });
+  const { data: priceHistory, isLoading: isPriceLoading } = useQuery({
+    queryFn: () => fetchTokenPriceHistory(token?.unique_id ?? ''),
+    queryKey: ['price']
+  });
+
+  const { data: favorites, isLoading: isFavoritesLoading } = useQuery({
+    queryFn: () =>
+      fetchTokens({
+        favorites: true
+      }),
+    queryKey: ['favorites']
+  });
+
+  if (!token || isLoading || isCommentsLoading || isPriceLoading || isFavoritesLoading) {
+    return (
+      <Shell className="pt-[160px]">
+        <div className="flex-col gap-8 md:flex md:flex-row md:gap-10">
+          <div className="flex w-full flex-col gap-10 md:w-3/4">
+            <Skeleton className="h-[245px] w-full" />
+            <div className="flex w-full flex-col gap-1">
+              <Skeleton className="h-[38px] w-full" />
+              <Skeleton className="h-[361px] w-full" />
+            </div>
+            <Skeleton className="h-[292px] w-full" />
+          </div>
+          <div className="flex w-full flex-col gap-4 md:w-[38%]">
+            <Skeleton className="h-[96px] w-full" />
+            <div className="flex w-full gap-1">
+              <Skeleton className="h-[53px] w-full" />
+              <Skeleton className="h-[53px] w-full" />
+            </div>
+            <Skeleton className="h-[331px] w-full" />
+          </div>
+        </div>
+      </Shell>
+    );
+  }
 
   return (
     <Shell className="pt-[110px]">
@@ -108,8 +161,8 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
             </TabsContent>
           </Tabs>
         </div>
-        <div className="sticky grid gap-6 self-start md:top-[110px]">
-          <TokenHeader token={token} favorites={favorites} />
+        <div className="grid gap-6 md:sticky md:top-[110px] md:self-start">
+          {favorites && <TokenHeader token={token} favorites={favorites.favorites} />}
           <BuyAndSellCard token={token} />
           <TokenSocial token={token} />
           {/* <TokenStats token={token} data={data} /> */}

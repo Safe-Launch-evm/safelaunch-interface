@@ -23,15 +23,15 @@ export type Token = {
   };
   stats: {
     marketStats: {
-      "priceInUsd": number,
-      "circulatingSupplyInToken": number,
-      "marketcapInUsd": number,
-      "liquidityInUsd": number
-    },
+      priceInUsd: number;
+      circulatingSupplyInToken: number;
+      marketcapInUsd: number;
+      liquidityInUsd: number;
+    };
     curveStats: {
-      "targetRwaLiquidity": number,
-      "currentRwaLiquidity": string
-    }
+      targetRwaLiquidity: number;
+      currentRwaLiquidity: string;
+    };
   };
   created_at: string;
   updated_at: string;
@@ -105,3 +105,11 @@ export type TokenPriceHistory = {
   currentPricePerNativeInUsd: number;
   history: TokenHistoryItem[];
 };
+
+export enum MimeTypes {
+  JPG = 'image/jpg',
+  PNG = 'image/png',
+  JPEG = 'image/jpeg',
+  SVG = 'image/svg',
+  GIF = 'image/gif'
+}

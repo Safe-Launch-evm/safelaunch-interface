@@ -1,3 +1,5 @@
+'use client';
+
 import SiteHeader from '@/components/layouts/site-header';
 
 interface AppLayoutProps {

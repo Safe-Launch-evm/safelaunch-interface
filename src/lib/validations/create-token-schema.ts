@@ -9,10 +9,13 @@ const socialLinksSchema = z.object({
 
 export const createTokenSchema = z.object({
   name: z.string().min(1, { message: 'Provide a name for token' }),
-  symbol: z.string().min(1, { message: 'Provide a symbol for token' }).max(6, { message: 'Symbol can\'t be more than 6 characters' }),
+  symbol: z
+    .string()
+    .min(1, { message: 'Provide a symbol for token' })
+    .max(6, { message: "Symbol can't be more than 6 characters" }),
   liquidityAmount: z.string().optional(),
   totalSupply: z.string().optional(),
-  image: z.any(),
+  image: z.instanceof(File),
   // image: z.any(
   //   z.instanceof(File).refine(file => file.size < 5 * 1024 * 1024, {
   //     message: 'File size must be less than 5MB'

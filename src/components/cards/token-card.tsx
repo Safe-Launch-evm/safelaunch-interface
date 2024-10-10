@@ -90,8 +90,11 @@ export default function TokenCard({ ...token }: TokenCardProps) {
   }
 
   return (
-    <Link href={`/token/${token.unique_id}`}>
-      <div className="relative rounded bg-card md:rounded-lg">
+    <div className="relative rounded bg-card md:rounded-lg">
+      <Link
+        href={`/token/${token.unique_id}`}
+        className="h-[117px] w-full rounded-t bg-card md:h-[197px]"
+      >
         <div
           className="h-[117px] rounded-t bg-gray-700 md:h-[197px] md:rounded-t-lg"
           style={{
@@ -100,17 +103,14 @@ export default function TokenCard({ ...token }: TokenCardProps) {
             backgroundRepeat: 'no-repeat',
             background: `url('${'/images/token-image.png'}')`
           }}
-        />
-        {/* <img
-          src={token.image}
-          alt=""
-          className="h-[117px] w-full rounded-t bg-gray-700 bg-cover bg-center bg-no-repeat md:h-[197px] md:rounded-t-lg"
-        /> */}
+        ></div>
+      </Link>
 
-        <button className="absolute right-4 top-4 flex size-7 items-center justify-center rounded-lg bg-card p-[6px] text-foreground hover:text-primary hover:shadow-btn">
-          <StarIcon className="size-4" />
-        </button>
+      <button className="absolute right-4 top-4 flex size-7 items-center justify-center rounded-lg bg-card p-[6px] text-foreground hover:text-primary hover:shadow-btn">
+        <StarIcon className="size-4" />
+      </button>
 
+      <Link href={`/token/${token.unique_id}`}>
         <div className="p-2 md:p-4">
           <div className="grid grid-cols-[3fr_1fr] items-center">
             <div>
@@ -140,7 +140,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
             </p>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

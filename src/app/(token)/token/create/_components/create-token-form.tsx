@@ -1,5 +1,6 @@
 'use client';
 
+import FileInput from '@/components/file-input';
 import NumberInput from '@/components/number-input';
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
@@ -9,6 +10,7 @@ import { useWallet } from '@/components/wallet/wallet-connect';
 import { WalletContext } from '@/context/wallet-context';
 import { createTokenSchema } from '@/lib/validations/create-token-schema';
 import { CloudArrowDownIcon } from '@heroicons/react/24/outline';
+
 import { useContext } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -22,20 +24,13 @@ export default function CreateTokenFrom() {
   });
 
   return (
-    <section className="w-full rounded-lg border border-border bg-card px-8 py-10 md:w-[518px]">
+    <section className="w-full border-border px-4 md:w-[518px] md:rounded-lg md:border md:bg-card md:px-8 md:py-10">
       <Form form={form} className="w-full">
-        <div className="flex w-full flex-col gap-2">
-          <span>Upload logo</span>
-          <div className="flex w-full flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-primary p-6">
-            <CloudArrowDownIcon className="size-10 text-primary" />
-            <div className="flex w-full flex-col items-center justify-center gap-2">
-              <span>
-                Drag your file(s) or <span className="text-primary">browse</span>
-              </span>
-              <p>Max 10 MB files are allowed</p>
-            </div>
-          </div>
-        </div>
+        <FileInput
+          handleFileChange={file => {
+            form.setValue('image', file);
+          }}
+        />
         <Input label="Token name" placeholder="Enter name" {...form.register('name')} />
         <Input label="Token symbol " placeholder="Symbol" {...form.register('name')} />
         <Textarea

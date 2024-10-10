@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { PlaceholderImage } from '@/components/placeholder-image';
 import { SocialIcon, SocialIconType } from '@/components/social-icons';
 import { Token } from '@/types';
 import { Share2Icon } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function TokenDescription({ token }: { token: Token }) {
@@ -27,18 +25,18 @@ export default function TokenDescription({ token }: { token: Token }) {
           </p>
         </div>
       </div> */}
-      <div className="flex items-start space-x-4">
+      <div className="flex flex-col items-start space-y-4 md:flex-row md:space-x-4">
         <img
           src={'/images/token-image.png'}
           alt={token.symbol}
-          className="float-none size-[183px] rounded border border-[#3E3E3E] bg-[#3E3E3E] object-cover"
+          className="float-none h-[183px] w-full rounded border border-[#3E3E3E] bg-[#3E3E3E] object-cover md:size-[183px]"
         />
         <div className="relative min-w-0 flex-auto space-y-[22px]">
           <h4>Description</h4>
           <p>{token.description}</p>
         </div>
       </div>
-      <dl className="flex w-full items-center gap-4">
+      <dl className="grid w-full grid-cols-2 items-center gap-4 md:flex">
         <TokenStatsCard title="Price" value="0.000032k TRX" />
         <TokenStatsCard title="Marketcap" value="28.22k" />
         <TokenStatsCard title="Liquidity" value="28.22k" />
@@ -58,7 +56,7 @@ const TokenStatsCard = ({ title, value }: { title: string; value: string }) => (
 export function TokenSocial({ token }: { token: Token }) {
   const socialLinks = JSON.parse(token.social_links);
   return (
-    <div className="flex items-center justify-center gap-[18px] self-stretch rounded border border-border px-6 py-3">
+    <div className="flex items-center justify-center gap-3 self-stretch rounded border border-border px-[18px] py-3 md:px-6">
       <SocialIconLink href={socialLinks.discord ?? '/'} icon="discord" name="Discord" />
       <SocialIconLink
         href={socialLinks.twitter ?? `/token/${token.unique_id}`}

@@ -1,3 +1,5 @@
+'use client';
+
 import TokenHeader from '@/components/layouts/token-header';
 
 interface AppLayoutProps {

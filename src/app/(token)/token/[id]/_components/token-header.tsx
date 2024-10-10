@@ -23,7 +23,7 @@ export default function TokenHeader({
 
   return (
     <div className="flex w-full flex-col items-start gap-6 md:h-auto">
-      <div className="flex w-full items-center justify-between gap-4">
+      <div className="flex w-full items-center justify-between gap-3 md:gap-4">
         <div className="flex flex-col items-start gap-4">
           <h3 className="text-[1.5rem]/[0.015rem] font-bold capitalize">{token?.name}</h3>
           <div className="flex items-center gap-2">
@@ -37,9 +37,6 @@ export default function TokenHeader({
           </div>
         </div>
         <AddToFavoriteButton tokenId={token.unique_id} favorite={isLike} />
-        {/* <Button variant={'outline'} size={'icon'} className="hover:shadow-dip">
-          <Star size={16} />
-        </Button> */}
       </div>
       <div className="flex w-full items-center justify-between">
         <span className="flex items-center gap-1">

@@ -2,17 +2,23 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline';
+import { Bars3BottomLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ConnectWalletButton } from '@/components/wallet/wallet-connect';
 import ScrollPast from './scroll-past';
 import { siteConfig } from '@/config/site-config';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
+import { WalletContext } from '@/context/wallet-context';
+import { useAccount } from 'wagmi';
 
 export default function SiteHeader() {
+  const { isConnected } = useAccount();
+  const { setOpen } = useContext(WalletContext);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // track page on scroll
   useEffect(() => {
@@ -42,7 +48,7 @@ export default function SiteHeader() {
             </Link>
             <ul className="hidden items-center gap-6 lg:inline-flex">
               {siteConfig.nav.map(item => (
-                <li key={item.href}>
+                <li key={item.title}>
                   <NavItem href={item.href} title={item.title} />
                 </li>
               ))}
@@ -51,12 +57,47 @@ export default function SiteHeader() {
               <ConnectWalletButton />
             </div>
             <div className="md:hidden">
-              <button>
+              <button type="button" onClick={() => setModalOpen(true)}>
                 <Bars3BottomLeftIcon className="size-6" />
               </button>
             </div>
           </nav>
         </div>
+        <aside
+          className={`top-0 md:hidden ${modalOpen ? 'translate-x-0' : 'translate-x-full'} fixed z-10 grid size-full grid-rows-[100px_1fr_100px] bg-background transition-transform duration-300 ease-in-out`}
+        >
+          <div className="flex items-center justify-between px-4 py-10">
+            <img alt="logo" src={'/images/logo.svg'} className="h-6 w-[41px]" />
+            <div>
+              <button className="" onClick={() => setModalOpen(false)}>
+                <XMarkIcon className="size-6" />
+              </button>
+            </div>
+          </div>
+          <ul className="flex flex-col items-start gap-10 px-4">
+            {siteConfig.nav.map(item => (
+              <li key={item.title}>
+                <NavItem href={item.href} title={item.title} />
+              </li>
+            ))}
+          </ul>
+          <div className="flex w-full items-center justify-center px-4">
+            {isConnected ? (
+              <ConnectWalletButton />
+            ) : (
+              <Button
+                type="button"
+                fullWidth
+                onClick={() => {
+                  setModalOpen(false);
+                  setOpen(true);
+                }}
+              >
+                Connect wallet
+              </Button>
+            )}
+          </div>
+        </aside>
       </header>
     </>
   );

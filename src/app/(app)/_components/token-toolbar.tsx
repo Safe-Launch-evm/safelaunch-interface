@@ -16,6 +16,7 @@ import {
   MagnifyingGlassIcon,
   StarIcon
 } from '@heroicons/react/24/outline';
+import { SelectFilter } from './select-filter';
 
 type ToolbarProps = {
   currentTab: string;
@@ -64,33 +65,20 @@ export default function TokenToolbar({ currentTab }: ToolbarProps) {
   }, [debouncedText, pathname, router, createQueryString]);
 
   return (
-    <section className="grid gap-4 lg:grid-cols-[2fr_1fr] lg:gap-8">
-      <div className="relative h-[52px] w-full">
-        <Search className="absolute left-4 top-4 size-5 text-primary" />
+    <section className="flex w-full flex-col items-center justify-between gap-4 md:flex-row md:gap-8">
+      <div className="relative flex h-[52px] w-full items-center gap-2 rounded-lg border border-border bg-[#131214] px-4 py-3">
+        <MagnifyingGlassIcon className="size-6 text-primary" />
         <input
           type="search"
-          placeholder="Search Token"
-          className="w-full rounded-lg border border-border bg-card px-4 py-3 pl-11 font-inter text-[1.25rem] placeholder:text-[#CECECE] focus:outline-none"
+          placeholder="Token search"
+          className="w-full border-none bg-[#131214] p-0 font-inter text-[1.25rem]/[1.75rem] placeholder:text-foreground/[0.50] focus:outline-none"
           value={search ?? ''}
           onChange={(e: any) => setSearch(e.target.value)}
         />
       </div>
-      {/* <div>
-      <div className="flex h-[52px] items-center rounded-[8px] border border-bgray-400">
-        <MagnifyingGlassIcon className="w-5 h-5 m-2 mr-5" />
-        <input
-          className="h-full w-full border border-transparent bg-transparent text-[20px]"
-          placeholder="Search Token"
-        />
-      </div>
-    </div> */}
-      <div className="flex h-[52px] gap-3">
-        <div className="flex-1">
-          <select className="size-full rounded-[8px] border border-border bg-transparent">
-            <option>Market Cap</option>
-          </select>
-        </div>
-        <div className="flex h-full gap-2">
+      <div className="flex w-full items-center justify-between gap-6 md:w-auto">
+        <SelectFilter />
+        <div className="flex h-10 gap-2 md:h-[52px]">
           <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-border">
             <ListBulletIcon className="size-5 text-muted" />
           </button>
@@ -103,40 +91,70 @@ export default function TokenToolbar({ currentTab }: ToolbarProps) {
         </div>
       </div>
     </section>
+    // <section className="grid gap-4 lg:grid-cols-[2fr_1fr] lg:gap-8">
+    //   <div className="relative h-[52px] w-full">
+    //     <Search className="absolute left-4 top-4 size-5 text-primary" />
+    //     <input
+    //       type="search"
+    //       placeholder="Search Token"
+    //       className="w-full rounded-lg border border-border bg-card px-4 py-3 pl-11 font-inter text-[1.25rem] placeholder:text-[#CECECE] focus:outline-none"
+    //       value={search ?? ''}
+    //       onChange={(e: any) => setSearch(e.target.value)}
+    //     />
+    //   </div>
+    //   <div className="flex h-[52px] gap-3">
+    //     <div className="flex-1">
+    //       <select className="size-full rounded-[8px] border border-border bg-transparent">
+    //         <option>Market Cap</option>
+    //       </select>
+    //     </div>
+    //     <div className="flex h-full gap-2">
+    //       <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-border">
+    //         <ListBulletIcon className="size-5 text-muted" />
+    //       </button>
+    //       <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-muted">
+    //         <Squares2X2Icon className="size-5 text-muted" />
+    //       </button>
+    //       <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-muted">
+    //         <BarsArrowDownIcon className="size-5 text-muted" />
+    //       </button>
+    //     </div>
+    //   </div>
+    // </section>
   );
 }
 
-export const MainTab = ({ selected }: { selected: string }) => {
-  const { address } = useAccount();
-  const tabs = [
-    'tokens',
-    'favorites'
-    // , 'following', 'scams'
-  ];
-  return (
-    <>
-      {tabs.map(tab => {
-        const active = selected === tab;
-        if (tab === 'favorites' && !address) {
-          return null;
-        }
-        return (
-          <Link
-            href={`/?tab=${tab}`}
-            key={tab}
-            className={cn(
-              buttonVariants({
-                variant: 'outline',
-                size: 'tab',
-                className: `capitalize ${active && 'border-primary text-primary'}`
-              })
-            )}
-            scroll
-          >
-            {tab}
-          </Link>
-        );
-      })}
-    </>
-  );
-};
+// export const MainTab = ({ selected }: { selected: string }) => {
+//   const { address } = useAccount();
+//   const tabs = [
+//     'tokens',
+//     'favorites'
+//     // , 'following', 'scams'
+//   ];
+//   return (
+//     <>
+//       {tabs.map(tab => {
+//         const active = selected === tab;
+//         if (tab === 'favorites' && !address) {
+//           return null;
+//         }
+//         return (
+//           <Link
+//             href={`/?tab=${tab}`}
+//             key={tab}
+//             className={cn(
+//               buttonVariants({
+//                 variant: 'outline',
+//                 size: 'tab',
+//                 className: `capitalize ${active && 'border-primary text-primary'}`
+//               })
+//             )}
+//             scroll
+//           >
+//             {tab}
+//           </Link>
+//         );
+//       })}
+//     </>
+//   );
+// };
