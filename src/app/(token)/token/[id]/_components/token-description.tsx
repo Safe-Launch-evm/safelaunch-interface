@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+'use client';
 import { SocialIcon, SocialIconType } from '@/components/social-icons';
 import { Token } from '@/types';
 import { Share2Icon } from 'lucide-react';

@@ -1,3 +1,4 @@
+'use client';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { BuyTokenForm } from './buy-token-form';

@@ -1,3 +1,4 @@
+'use client';
 import { Progress } from '@/components/ui/progress';
 import { Token } from '@/types';
 import { toIntNumberFormat } from '@/lib/utils';

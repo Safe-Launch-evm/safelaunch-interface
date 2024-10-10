@@ -1,3 +1,4 @@
+'use client';
 import { Shell } from '@/components/shell';
 import { CreateTokenFrom } from './_components/create-token-form';
 
