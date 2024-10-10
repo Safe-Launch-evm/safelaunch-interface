@@ -4,7 +4,6 @@ import { getCookieStorage } from '../cookie-storage';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export const addComment = async (tokenId: string, data: object) => {
-  noStore();
   try {
     const token = await getCookieStorage('auth_token');
     const comment = await client(`/token/comments/${tokenId}`, {
@@ -29,7 +28,6 @@ export type CommentsResponse = {
 };
 
 export const fetchTokenComments = async (tokenId: string): Promise<CommentType[]> => {
-  noStore();
   try {
     const comments: CommentsResponse = await client(`/token/comments/${tokenId}`, {
       tag: 'comments'

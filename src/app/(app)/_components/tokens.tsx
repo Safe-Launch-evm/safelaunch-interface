@@ -44,12 +44,8 @@ export default function Tokens({
     );
   }
 
-  if (!fetchTokens || !fetchFavorites) {
-    return null;
-  }
-
-  const { tokens, favorites } = fetchTokens;
-  const { favorites: likes } = fetchFavorites;
+  const { tokens, favorites } = fetchTokens ?? {};
+  const { favorites: likes } = fetchFavorites ?? {};
 
   if (favorites) {
     return (
@@ -76,7 +72,7 @@ export default function Tokens({
 
   return (
     <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
-      {tokens !== null ? (
+      {tokens ? (
         <>
           {tokens.length >= 1 ? (
             tokens.map(token => {

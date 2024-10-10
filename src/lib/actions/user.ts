@@ -13,7 +13,6 @@ export type UserResponse = {
 };
 
 export async function getUser({ address }: { address: string }): Promise<UserType | null> {
-  noStore();
   try {
     const user: UserResponse = await client(`/user/auth/${address}`, { tag: 'user' });
     if (user.code !== 200) {
@@ -24,7 +23,7 @@ export async function getUser({ address }: { address: string }): Promise<UserTyp
     return null;
   }
 }
-export async function getUserById(userId: string ): Promise<UserType | null> {
+export async function getUserById(userId: string): Promise<UserType | null> {
   try {
     const user: UserResponse = await client(`/user/${userId}`, { tag: 'user' });
     if (user.code !== 200) {
@@ -37,7 +36,6 @@ export async function getUserById(userId: string ): Promise<UserType | null> {
 }
 
 export async function registerUser(data: ProfileInput) {
-  noStore();
   try {
     const user = await client(`/user/register`, { tag: 'user', formData: data });
     if (!user) return user;
@@ -48,7 +46,6 @@ export async function registerUser(data: ProfileInput) {
 }
 
 export async function getNonce({ address }: { address: string }) {
-  noStore();
   try {
     const nonce = await client('/auth/get-nonce', {
       formData: { walletAddress: address },
@@ -61,7 +58,6 @@ export async function getNonce({ address }: { address: string }) {
 }
 
 export async function verifyNonce({ address, sig }: { address: string; sig: string }) {
-  noStore();
   try {
     const nonce: any = await client('/auth/verify-nonce', {
       formData: { walletAddress: address, signature: sig },
@@ -90,7 +86,6 @@ type ResultPromise = {
   tokens: Token[];
 };
 export async function getUserTokens(userId: string): Promise<ResultPromise> {
-  noStore();
   try {
     const tokens: FetchTokenResponse = await client(`/tokens/user/${userId}`, {
       tag: 'user_token'
