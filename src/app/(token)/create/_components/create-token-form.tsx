@@ -1,6 +1,5 @@
 'use client';
 
-import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -9,30 +8,18 @@ import { ConnectWalletButton } from '@/components/wallet/wallet-connect';
 import { handleDelete } from '@/config/cloud';
 import { WalletContext } from '@/context/wallet-context';
 import { createToken, uploadLogo } from '@/lib/actions/token';
-import client from '@/lib/client';
-import { formatBytes, truncate } from '@/lib/utils';
+import { truncate } from '@/lib/utils';
 import { CreateTokenInput, createTokenSchema } from '@/lib/validations/create-token-schema';
 import { STATE_STATUS } from '@/types';
-import {
-  ChevronLeft,
-  Circle,
-  CircleX,
-  Delete,
-  FileImage,
-  ImagePlus,
-  LoaderCircle,
-  X
-} from 'lucide-react';
+import { ChevronLeft, CircleX, Delete, ImagePlus, LoaderCircle } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'sonner';
-import { useAccount, useChainId, useConnections, useWalletClient } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { SuccessTokenCreated, TokenRWA } from './utils';
 import SafeLaunch from '@/contract/safe-launch';
 import { assetChainTestnet } from 'viem/chains';
-import { config } from '@/lib/wagmi-config';
-import { createPublicClient, createWalletClient, http, custom, getContract } from 'viem';
+import { createWalletClient, custom } from 'viem';
 
 interface FormSectionProps {
   [key: string]: React.ReactNode;
@@ -304,7 +291,7 @@ export const CreateTokenFrom = () => {
   };
 
   return (
-    <div className="max-w-[570px] gap-10 rounded-lg border bg-card-200">
+    <div className="bg-card-200 max-w-[570px] gap-10 rounded-lg border">
       {status === STATE_STATUS.SUCCESS ? (
         <SuccessTokenCreated formData={formInputData} />
       ) : (

@@ -1,3 +1,4 @@
+'use client';
 export type SocialIconType = keyof typeof SocialIcon;
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
