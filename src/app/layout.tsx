@@ -34,7 +34,7 @@ export default function RootLayout({
 
   return (
     <Web3Provider initialState={initialState}>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body
           className={`min-h-screen bg-background font-bricolage text-foreground antialiased ${bricolage.variable} ${inter.variable}`}
         >

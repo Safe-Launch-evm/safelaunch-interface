@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('animate-pulse rounded-md bg-card-foreground/70', className)}
+      className={cn('animate-pulse rounded-md bg-foreground/[0.30]', className)}
       {...props}
     />
   );

@@ -45,7 +45,7 @@ export default function Home({ searchParams }: HomeProps) {
     queryKey: ['userTokens']
   });
 
-  if (!data || isLoading || !userTokens || isLikesLoading) {
+  if (isLoading || isLikesLoading) {
     return (
       <div className="grid grid-cols-2 gap-3 bg-card md:grid-cols-3 md:gap-6 lg:grid-cols-4">
         {Array.from({ length: 8 }).map((_, i) => (
@@ -65,11 +65,8 @@ export default function Home({ searchParams }: HomeProps) {
     );
   }
 
-  const { favorites: likes, tokens } = data;
-  const { favorites: userLikes } = userTokens;
-
-  console.log(data);
-  console.log(userTokens);
+  const { favorites: likes, tokens } = data ?? {};
+  const { favorites: userLikes } = userTokens ?? {};
 
   return (
     <Shell className="gap-10 pt-[140px] md:gap-[100px] md:pt-[198px]">
@@ -83,8 +80,32 @@ export default function Home({ searchParams }: HomeProps) {
         fetchTokenPromise={fetchTokenPromise}
         fetchUserTokenPromise={fetchUserTokenPromise}
       /> */}
+      {/* {isLoading || isLikesLoading ? (
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="relative rounded md:rounded-lg">
+              <Skeleton key={i} className="h-[117px] rounded-t md:h-[197px] md:rounded-t-lg" />
+              <div className="w-full bg-card p-2 md:p-4">
+                <div className="grid grid-cols-[3fr_1fr] items-center">
+                  <div>
+                    <Skeleton className="h-[22px] w-[138px] rounded" />
+                    <Skeleton className="h-[22px] w-[138px] rounded" />
+                  </div>
+                  <div>
+                    <Skeleton className="h-[22px] w-[34px]" />
+                  </div>
+                </div>
+                <div className="flex gap-1 py-2">
+                  <span className="inline-block h-1 w-full rounded" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null} */}
+
       <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
-        {tokens !== null ? (
+        {tokens ? (
           <>
             {tokens.length >= 1 ? (
               tokens.map(token => {
@@ -114,7 +135,7 @@ export default function Home({ searchParams }: HomeProps) {
             )}
           </>
         ) : null}
-        {likes !== null ? (
+        {likes ? (
           <>
             {likes?.length >= 1 ? (
               likes?.map(favorite => {
