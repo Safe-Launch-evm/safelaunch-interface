@@ -90,7 +90,7 @@ export default function TokenCard({ ...token }: TokenCardProps) {
   }
 
   return (
-    <div className="relative rounded bg-card md:rounded-lg">
+    <div className="relative rounded bg-card shadow-md shadow-card md:rounded-lg">
       <Link
         href={`/token/${token.unique_id}`}
         className="h-[117px] w-full rounded-t bg-card md:h-[197px]"
@@ -110,8 +110,47 @@ export default function TokenCard({ ...token }: TokenCardProps) {
         <StarIcon className="size-4" />
       </button>
 
-      <Link href={`/token/${token.unique_id}`}>
-        <div className="p-2 md:p-4">
+      <Link
+        href={`/token/${token.unique_id}`}
+        className="group translate-y-1 transition-all duration-200"
+      >
+        <div className="relative p-2 md:p-4">
+          <div className="absolute bottom-0 right-0 rounded-b opacity-0 group-hover:opacity-100 md:rounded-b-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="292"
+              height="231"
+              viewBox="0 0 292 231"
+              fill="none"
+            >
+              <g opacity="0.8" filter="url(#filter0_f_2014_9835)">
+                <circle cx="156" cy="215" r="55" fill="#80A8BA" />
+              </g>
+              <defs>
+                <filter
+                  id="filter0_f_2014_9835"
+                  x="-59"
+                  y="0"
+                  width="430"
+                  height="430"
+                  filterUnits="userSpaceOnUse"
+                  color-interpolation-filters="sRGB"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feBlend
+                    mode="normal"
+                    in="SourceGraphic"
+                    in2="BackgroundImageFix"
+                    result="shape"
+                  />
+                  <feGaussianBlur
+                    stdDeviation="80"
+                    result="effect1_foregroundBlur_2014_9835"
+                  />
+                </filter>
+              </defs>
+            </svg>
+          </div>
           <div className="grid grid-cols-[3fr_1fr] items-center">
             <div>
               <p className="text-[1rem] font-bold md:text-[20px]">
