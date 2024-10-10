@@ -15,7 +15,7 @@ import { fetchTokenComments } from '@/lib/actions/comment';
 import { formatAddress, formatDate, formatDateToNow, formatPrice } from '@/lib/utils';
 import { TokenCurveData, TokenStats } from './_components/token-curve-data';
 import TokenHeader from './_components/token-header';
-import TokenDescription from './_components/token-description';
+import TokenDescription, { TokenSocial } from './_components/token-description';
 import { TokenChart } from './_components/token-chart';
 
 export async function generateMetadata({
@@ -64,13 +64,14 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
   const { favorites } = await fetchTokens({ favorites: true });
 
   return (
-    <Shell className="pt-[160px]">
+    <Shell className="pt-[110px]">
       {/* Desktop */}
-      <div className="hidden flex-col gap-8 md:flex md:flex-row md:gap-10">
-        <div className="flex w-full flex-col gap-10 md:w-3/4">
+      <div className="grid grid-cols-1 grid-rows-[1fr_auto] gap-[42px] md:grid-cols-[2fr_1fr] md:grid-rows-1">
+        <div className="w-full space-y-10">
           <TokenDescription token={token} />
-          {/* <div className="h-[361px] w-full rounded bg-card-foreground" /> */}
-          {priceHistory && <TokenChart history={priceHistory} />}
+          {/* {priceHistory && <TokenChart history={priceHistory} />} */}
+
+          <div className="h-[440px] w-full rounded border border-border bg-card" />
 
           {token && <TokenCurveData token={token} data={data} />}
           <Tabs defaultValue="comments">
@@ -107,15 +108,15 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
             </TabsContent>
           </Tabs>
         </div>
-
-        <div className="flex w-full flex-col gap-4 md:w-[38%]">
+        <div className="sticky grid gap-6 self-start md:top-[110px]">
           <TokenHeader token={token} favorites={favorites} />
           <BuyAndSellCard token={token} />
-          <TokenStats token={token} data={data} />
+          <TokenSocial token={token} />
+          {/* <TokenStats token={token} data={data} /> */}
         </div>
       </div>
       {/* mobile */}
-      <section className="block w-full md:hidden">
+      {/* <section className="block w-full md:hidden">
         <TokenHeader token={token} favorites={favorites} />
 
         <Tabs defaultValue="details">
@@ -177,7 +178,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
             <TokenStats token={token} data={data} />
           </TabsContent>
         </Tabs>
-      </section>
+      </section> */}
     </Shell>
   );
 }

@@ -9,9 +9,10 @@ export function calcCurvePercent(currentLiquidity: number, targetLiquidity: numb
 
 export function TokenCurveData({ token, data }: { token: Token; data: any }) {
   return (
-    <div className="flex flex-col gap-4 rounded border border-card-foreground bg-card p-4">
-      <h2 className="text-[1.25rem]/[0.0125rem] font-bold">Bonding curve</h2>
-      <div className="w-full py-4">
+    <div className="grid gap-4 rounded border border-border bg-card p-4">
+      <h2 className="mt-4 text-[1.25rem]/[0.0125rem] font-bold">Bonding curve</h2>
+
+      <div className="relative mt-4 w-full">
         <Progress
           value={calcCurvePercent(
             Number(data?.curveStats?.currentRwaLiquidity),

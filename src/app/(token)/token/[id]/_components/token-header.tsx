@@ -5,6 +5,7 @@ import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
 import { getCookieStorage } from '@/lib/cookie-storage';
 import { _formatAddress, formatAddress } from '@/lib/utils';
 import { STATE_STATUS, Token, TokenLike } from '@/types';
+import { StarIcon } from '@heroicons/react/24/outline';
 import { CircleCheck, Copy, LoaderCircle, Star } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -25,8 +26,8 @@ export default function TokenHeader({
       <div className="flex w-full items-center justify-between gap-4">
         <div className="flex flex-col items-start gap-4">
           <h3 className="text-[1.5rem]/[0.015rem] font-bold capitalize">{token?.name}</h3>
-          <div className="flex items-center gap-1">
-            <span> Created by</span>
+          <div className="flex items-center gap-2">
+            <span className="text-foreground/[0.50]">Created by</span>
             <Link
               href={`/profile/${token.creator_id}`}
               className="text-primary hover:text-accent-200"
@@ -40,18 +41,21 @@ export default function TokenHeader({
           <Star size={16} />
         </Button> */}
       </div>
-      <div className="flex w-full items-center justify-between text-[0.875rem] font-light lg:text-[1rem]/[0.01rem]">
-        <span>Contract:</span>
-        <span>
-          <Link
-            className="hover:text-primary"
-            target="__blank__"
-            href={`https://scan-testnet.assetchain.org/token/${token?.contract_address}`}
-          >
-            {token && _formatAddress(token?.contract_address, 16)}
-          </Link>
+      <div className="flex w-full items-center justify-between">
+        <span className="flex items-center gap-1">
+          <span className="text-[0.875rem] font-light text-foreground/[0.50] lg:text-[1rem]/[0.01rem]">
+            Address:
+          </span>
+          <span>
+            <Link
+              className="text-[0.875rem] font-light hover:text-primary lg:text-[1rem]/[0.01rem]"
+              target="__blank__"
+              href={`https://scan-testnet.assetchain.org/token/${token?.contract_address}`}
+            >
+              {token && _formatAddress(token?.contract_address, 16)}
+            </Link>
+          </span>
         </span>
-        {/* <Copy size={24} /> */}
         <CopyAddressButton contractAddress={token.contract_address} />
       </div>
     </div>
@@ -76,7 +80,7 @@ export function CopyAddressButton({ contractAddress }: { contractAddress: string
 
   return (
     <button onClick={handleCopy}>
-      {copied ? <CircleCheck className="size-6 text-primary" /> : <Copy className="size-6" />}
+      {copied ? <CircleCheck className="size-6" /> : <Copy className="size-6 text-primary" />}
     </button>
   );
 }
@@ -151,27 +155,27 @@ function AddToFavoriteButton({
     <>
       {favorite ? (
         <button
-          className="flex size-[34px] items-center justify-center rounded-lg border bg-primary text-primary-foreground hover:text-primary-foreground hover:shadow-dip"
+          className="flex items-center justify-center rounded-[10px] border bg-foreground p-2.5 text-primary-foreground hover:text-primary-foreground hover:shadow-btn"
           disabled={status === STATE_STATUS.LOADING}
           onClick={removeFromFavorite}
         >
           {status === STATE_STATUS.LOADING ? (
             <LoaderCircle className="size-4 animate-spin" />
           ) : (
-            <Star size={16} />
+            <StarIcon className="size-5" />
           )}
         </button>
       ) : (
         <button
           type="button"
-          className="flex size-[34px] items-center justify-center rounded-lg border hover:bg-primary hover:text-primary-foreground hover:shadow-dip"
+          className="flex items-center justify-center rounded-[10px] border p-2.5 hover:bg-foreground hover:text-primary-foreground hover:shadow-btn"
           disabled={status === STATE_STATUS.LOADING}
           onClick={addToFavorite}
         >
           {status === STATE_STATUS.LOADING ? (
             <LoaderCircle className="size-4 animate-spin" />
           ) : (
-            <Star size={16} />
+            <StarIcon className="size-5" />
           )}
         </button>
       )}

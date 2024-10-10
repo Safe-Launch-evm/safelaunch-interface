@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import * as React from 'react';
@@ -45,6 +46,7 @@ import { uploadLogo } from '@/lib/actions/token';
 import { truncate } from '@/lib/utils';
 import { toast } from 'sonner';
 import RegisterUserForm from './register-user-form';
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const MODAL_CLOSE_DURATION = 320;
 
@@ -155,11 +157,13 @@ function WalletConnectors() {
           Connect your Web3 wallet or create a new one.
         </WalletModalDescription>
       </WalletModalHeader>
-      <WalletModalBody>
+      <WalletModalBody className="h-[492px] md:h-auto">
         {context.pendingConnector ? <WalletConnecting /> : <WalletOptions />}
       </WalletModalBody>
       <WalletModalFooter>
-        <div className="h-0" />
+        <div className="flex items-end justify-end">
+          <Button>Close</Button>
+        </div>
       </WalletModalFooter>
     </>
   );
@@ -234,7 +238,7 @@ function WalletOption(props: { connector: Connector; onClick: () => void }) {
     <button
       disabled={!ready}
       onClick={props.onClick}
-      className="group flex items-center justify-between rounded-lg border bg-card px-6 py-3 transition-colors duration-200 ease-linear hover:bg-secondary hover:shadow-dip disabled:pointer-events-none disabled:opacity-50"
+      className="group flex items-center justify-between rounded-lg border bg-[#242424] px-6 py-3 transition-colors duration-200 ease-linear hover:bg-card hover:shadow-dip disabled:pointer-events-none disabled:opacity-50"
     >
       <div className="flex items-center gap-6">
         {props.connector.icon && (
@@ -248,7 +252,7 @@ function WalletOption(props: { connector: Connector; onClick: () => void }) {
           {props.connector.name}
         </p>
       </div>
-      {ready ? <Icon.arrowRight className="size-6" /> : null}
+      {ready ? <ChevronRightIcon className="size-6" /> : null}
     </button>
   );
 }

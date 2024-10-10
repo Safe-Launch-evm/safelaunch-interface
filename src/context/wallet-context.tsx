@@ -115,7 +115,7 @@ export default function WalletProvider(props: { children: React.ReactNode }) {
     >
       {props.children}
       <WalletModal open={open} onOpenChange={setOpen}>
-        <WalletModalContent>
+        <WalletModalContent className="flex flex-col gap-6 bg-card shadow-btn lg:max-w-[526px] lg:px-8 lg:py-10">
           {isConnected ? <Account /> : <WalletConnectors />}
         </WalletModalContent>
       </WalletModal>

@@ -5,24 +5,25 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap gap-2 border rounded-lg text-[1.5rem] font-bold transition-colors disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border text-[1.25rem]/[1.75rem] font-medium transition-colors disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-primary hover:bg-primary/90 hover:shadow-dip',
+        default:
+          'bg-primary text-[#030208] hover:bg-primary/90 hover:text-[#030208]/90 hover:shadow-btn',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        outline: 'border bg-transparent text-muted hover:text-primary hover:border-primary',
+        outline: 'border bg-transparent text-muted hover:border-primary hover:text-primary',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost:
-          'hover:bg-card border border-transparent hover:border-primary hover:text-primary',
+          'border border-transparent hover:border-primary hover:bg-card hover:text-primary',
         link: 'text-primary underline-offset-4 hover:underline'
       },
       size: {
-        default: 'p-3 h-[37px] lg:h-[53px] text-[1rem] lg:text-[1.5rem]',
+        default: 'px-3 py-2 text-[1rem] lg:text-[1.25rem]/[1.75rem]',
         sm: 'h-9 rounded-md px-3 text-[1.25rem]',
-        tab: 'lg:h-[36px] h-6 p-2 lg:p-3 font-medium font-inter text-[1rem] rounded',
-        lg: 'p-3 rounded-lg',
-        icon: 'h-10 w-10'
+        tab: 'h-6 rounded p-2 font-inter text-[1rem] font-medium lg:h-[36px] lg:p-3',
+        lg: 'rounded-lg p-3',
+        icon: 'size-10'
       },
       fullWidth: {
         true: 'w-full'

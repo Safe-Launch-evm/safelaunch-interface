@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Image from 'next/image';
@@ -12,6 +13,7 @@ import { STATE_STATUS } from '@/types';
 import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
 import { toast } from 'sonner';
 import { getCookieStorage } from '@/lib/cookie-storage';
+import { StarIcon } from '@heroicons/react/24/outline';
 
 type TokenCardProps = {
   unique_id: string;
@@ -88,82 +90,57 @@ export default function TokenCard({ ...token }: TokenCardProps) {
   }
 
   return (
-    <div className="flex w-full min-w-full flex-col items-start gap-4 rounded-lg border border-card-foreground bg-card p-2 lg:min-w-[240px] lg:p-4">
-      <div className="flex w-full flex-col items-start justify-start gap-2 text-wrap lg:flex-row lg:items-center lg:justify-between">
-        <dd className="flex items-center justify-center rounded bg-primary px-1 py-[2px] text-[0.5rem] text-white lg:text-[0.875rem]">
-          ${token.symbol}
-        </dd>
-        <dd className="text-[0.875rem]/[0.00875rem] font-light">
-          Market cap: <span className="text-[#6100FF]">$ {token.market_cap}</span>
-        </dd>
-      </div>
-      <AspectRatio ratio={2 / 1.5}>
-        {token.image ? (
-          <Image
-            src={token.image ?? '/images/token-placeholder.webp'}
-            alt={`${token.name}-${token.symbol}`}
-            className="rounded-lg bg-no-repeat object-cover object-center"
-            sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
-            fill
-            loading="lazy"
-          />
-        ) : (
-          <PlaceholderImage className="rounded-none" asChild />
-        )}
-      </AspectRatio>
-      {/* <Image
-        src={token.image}
-        alt={token.name}
-        width={208}
-        height={134}
-       
-        className="h-[134px] min-w-[134px] rounded-lg bg-cover bg-no-repeat lg:min-w-[208px]"
-        priority
-      /> */}
-      <div className="flex size-full items-center justify-between">
-        <div className="flex h-full flex-col gap-1">
-          <dt className="text-ellipsis font-bold">
-            <Link href={`/token/${token.unique_id}`}>{truncate(token.name, 14)}</Link>
+    <Link href={`/token/${token.unique_id}`}>
+      <div className="relative rounded bg-card md:rounded-lg">
+        <div
+          className="h-[117px] rounded-t bg-gray-700 md:h-[197px] md:rounded-t-lg"
+          style={{
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            background: `url('${'/images/token-image.png'}')`
+          }}
+        />
+        {/* <img
+          src={token.image}
+          alt=""
+          className="h-[117px] w-full rounded-t bg-gray-700 bg-cover bg-center bg-no-repeat md:h-[197px] md:rounded-t-lg"
+        /> */}
 
-            {/* {token.name} */}
-          </dt>
-          <dd className="text-sm font-light text-muted">
-            Created by{' '}
-            <Link
-              href={`/profile/${token.creator_unique_id}`}
-              className="text-primary underline-offset-4 hover:underline"
-            >
-              {token.owner ?? 'view'}
-            </Link>
-          </dd>
+        <button className="absolute right-4 top-4 flex size-7 items-center justify-center rounded-lg bg-card p-[6px] text-foreground hover:text-primary hover:shadow-btn">
+          <StarIcon className="size-4" />
+        </button>
+
+        <div className="p-2 md:p-4">
+          <div className="grid grid-cols-[3fr_1fr] items-center">
+            <div>
+              <p className="text-[1rem] font-bold md:text-[20px]">
+                {truncate(token.name, 14)}
+              </p>
+              <p className="text-[0.875rem] font-light text-slate-400 md:text-[1rem]">
+                Created by{' '}
+                <Link href={`/profile/${token.creator_unique_id}`}>
+                  {truncate(token.owner!, 10) ?? 'view'}
+                </Link>
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="rounded bg-primary px-2 py-1 text-[0.75rem] md:text-[1.125rem]">
+                ${token.symbol}
+              </span>
+            </div>
+          </div>
+          <div className="flex gap-1 py-2">
+            <span className="inline-block h-1 w-4/5 rounded bg-primary" />
+            <span className="inline-block h-1 w-1/5 rounded bg-slate-200" />
+          </div>
+          <div>
+            <p className="text-[0.875rem] font-light md:text-[18px]">
+              Marketcap: <span className="text-primary">{token.market_cap}</span>
+            </p>
+          </div>
         </div>
-        {token.user ? (
-          <button
-            className="flex size-[34px] items-center justify-center rounded-lg border bg-primary text-primary-foreground hover:text-primary-foreground hover:shadow-dip"
-            disabled={status === STATE_STATUS.LOADING}
-            onClick={removeFromFavorite}
-          >
-            {status === STATE_STATUS.LOADING ? (
-              <LoaderCircle className="size-4 animate-spin" />
-            ) : (
-              <Star size={16} />
-            )}
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="flex size-[34px] items-center justify-center rounded-lg border hover:bg-primary hover:text-primary-foreground hover:shadow-dip"
-            disabled={status === STATE_STATUS.LOADING}
-            onClick={addToFavorite}
-          >
-            {status === STATE_STATUS.LOADING ? (
-              <LoaderCircle className="size-4 animate-spin" />
-            ) : (
-              <Star size={16} />
-            )}
-          </button>
-        )}
       </div>
-    </div>
+    </Link>
   );
 }

@@ -5,7 +5,7 @@ import { SellTokenForm } from './sell-token-form';
 
 export default function BuyAndSellCard({ token }: { token: any }) {
   return (
-    <div className="flex w-full items-center rounded border px-4 py-6 lg:px-[23px] lg:py-[26px]">
+    <div className="flex w-full items-center rounded border px-4 py-6 lg:px-[23px]">
       <Tabs defaultValue="buy" className="w-full">
         <TabsList variant={'pill'}>
           <TabsTrigger variant={'pill'} value="buy" className="rounded-r-none border-r-0">

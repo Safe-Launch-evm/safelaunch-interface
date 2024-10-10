@@ -7,7 +7,6 @@ import { SwapTokenInput, swapTokenSchema } from '@/lib/validations/swap-token-sc
 // import { useFormik } from 'formik';
 import { STATE_STATUS, Token } from '@/types';
 import { ArrowBigDown, LoaderCircle } from 'lucide-react';
-import Image from 'next/image';
 import { assetChainTestnet } from 'viem/chains';
 import { useAccount, useBalance, useWalletClient } from 'wagmi';
 import { createWalletClient, custom } from 'viem';
@@ -16,6 +15,7 @@ import NumberInput from '@/components/number-input';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toIntNumberFormat } from '@/lib/utils';
+import { Icon } from '@/components/icons';
 
 export function BuyTokenForm({ token }: { token: Token }) {
   const router = useRouter();
@@ -36,37 +36,11 @@ export function BuyTokenForm({ token }: { token: Token }) {
       transport: window && custom(window?.ethereum!)
     });
     setWalletClient(client);
-  }, []);
+  }, [address]);
 
   const form = useZodForm({
     schema: swapTokenSchema
   });
-
-  // const formik = useFormik({
-  //   initialValues: {
-  //     amount: 0
-  //   },
-  //   onSubmit: async values => {
-  //     try {
-  //       if (formik.values.amount == 0) throw new Error('Enter an amount.');
-
-  //       const safeLaunch = new SafeLaunch(walletClient, address);
-  //       const reciept = await safeLaunch.buyToken(
-  //         token?.contract_address,
-  //         String(formik.values.amount)
-  //       );
-  //       if (!reciept?.ok) {
-  //         throw new Error(reciept.data);
-  //       } else {
-  //         toast.success('Nice!', {
-  //           description: `${values.amount} ${token.symbol} purchased successfully.`
-  //         });
-  //       }
-  //     } catch (error: any) {
-  //       toast.error('Opps!', { description: error?.messsage ?? 'An error occurred' });
-  //     }
-  //   }
-  // });
 
   async function onSubmit(data: SwapTokenInput) {
     setStatus(STATE_STATUS.LOADING);
@@ -99,61 +73,44 @@ export function BuyTokenForm({ token }: { token: Token }) {
     <Form
       form={form}
       onSubmit={form.handleSubmit(onSubmit)}
-      className="grid w-full grid-cols-1 gap-6 py-6"
+      className="grid w-full grid-cols-1 gap-6 pt-6"
       disabled={status === STATE_STATUS.LOADING}
     >
       {/* <div className=""> */}
       <div className="flex w-full flex-col items-start justify-center gap-6 rounded border bg-input px-3 py-3.5">
         <div className="flex w-full items-center justify-between">
-          <div className="flex items-center justify-center gap-2 rounded-[22px] border px-2 py-1">
-            <Image
-              src={'/images/xend-icon.svg'}
-              alt="RWA"
-              width={22}
-              height={22}
-              className="pointer-events-none size-[22px]"
-              priority
-            />
-
-            <div className="flex items-center gap-2">
-              <span className="text-[1rem]">RWA</span>{' '}
-            </div>
-          </div>
           <span className="flex font-inter text-[1rem] text-primary">
-            {`RWA Balance: ${toIntNumberFormat(Number(rwaBalance?.data?.formatted))}`}
+            {`Balance: ${toIntNumberFormat(Number(rwaBalance?.data?.formatted))}`}
           </span>
+          <div className="flex items-center gap-2 rounded-[22px] bg-[#18191E] px-[5px] py-1">
+            <Icon.rwaIcon className="size-[25px]" />{' '}
+            <span className="text-[1rem] font-light">$RWA</span>
+          </div>
         </div>
         <NumberInput
           thousandSeparator=","
-          className="flex w-full rounded-lg border border-none bg-input px-0 py-0 font-inter text-[1.5rem] font-normal text-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#848E9C] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full rounded-lg border border-none bg-input p-0 font-inter text-[1.5rem] font-normal text-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#848E9C] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           allowNegative={false}
           placeholder="0.00"
           {...form.register('amount', { required: true })}
         />
-        {/* <Input
-          className="border-none px-0 py-0 font-bricolage text-[1.5rem] focus:outline-none"
-          placeholder="0.00"
-          name="amount"
-          value={formik.values.amount}
-          onChange={formik.handleChange}
-        /> */}
       </div>
-      {/* <div className="flex w-full items-center justify-between rounded border bg-input px-2.5 py-2">
-        <Input
-          placeholder="0.00"
-          className="border-none p-0 font-bricolage focus:outline-none"
-        />
-        <div className="flex w-[70px] items-center justify-center gap-2 rounded-[22px] border border-none bg-white/[0.34] px-2 py-[6px]">
-          <Image
-            src={token?.logo_url ?? '/images/xend-icon.svg'}
-            alt="RWA"
-            width={22}
-            height={22}
-            className="pointer-events-none size-[22px] rounded-full"
-            priority
-          />
-        </div>
-      </div> */}
+      <div className="flex w-full items-center justify-between">
+        {[10, 25, 50, 100].map(a => (
+          <button
+            key={a}
+            type={'button'}
+            className="whitespace-nowrap rounded bg-card p-2 px-3 text-[1rem] font-light text-foreground/[0.50] saturate-200 transition-all ease-in hover:shadow-btn"
+            onClick={() => form.setValue('amount', `${a}`, { shouldValidate: true })}
+          >
+            {a} RWA
+          </button>
+        ))}
+      </div>
+      <div className="flex items-center justify-between font-inter text-[1rem] text-foreground/[0.50]">
+        <span>To received</span>
+        <span>0 {token.symbol}</span>
+      </div>
       <Button
         type="submit"
         size={'lg'}

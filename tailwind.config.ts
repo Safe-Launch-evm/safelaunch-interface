@@ -14,11 +14,11 @@ const config = {
     },
     extend: {
       colors: {
-        background: '#E9EAED',
-        foreground: '#3E3E3E',
+        background: '#0A090E',
+        foreground: '#FCFCFC',
         primary: {
-          DEFAULT: '#81A9BB',
-          foreground: '#EEEEEE'
+          DEFAULT: '#80A8BA',
+          foreground: '#3E3E3E'
         },
         secondary: {
           DEFAULT: '#FFF083',
@@ -32,6 +32,10 @@ const config = {
           DEFAULT: '#767676',
           foreground: 'hsl(var(--muted-foreground))'
         },
+        card: {
+          DEFAULT: '#151419',
+          foreground: '#FCFCFC'
+        },
         accent: {
           DEFAULT: '#D2DCF1',
           foreground: '#6100FF',
@@ -41,14 +45,9 @@ const config = {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))'
         },
-        border: '#3E3E3E',
-        input: '#EEEEEE',
-        ring: 'hsl(var(--ring))',
-        card: {
-          DEFAULT: '#EEEEEE',
-          200: 'E3E3E3',
-          foreground: '#D9D9D9'
-        },
+        border: '#79787B',
+        input: '#151419',
+        ring: '#79787B',
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
@@ -63,7 +62,7 @@ const config = {
       },
       boxShadow: {
         dip: '0px 4px 0px 0px #3E3E3E',
-        btn: '0px 0px 0px 2px #3E3E3E'
+        btn: '0px 0px 8px 0px rgba(252, 252, 252, 0.45)'
       },
       keyframes: {
         'accordion-down': {
@@ -87,11 +86,11 @@ const config = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out'
       },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
-      }
+      // borderRadius: {
+      //   lg: 'var(--radius)',
+      //   md: 'calc(var(--radius) - 2px)',
+      //   sm: 'calc(var(--radius) - 4px)'
+      // }
     }
   },
   plugins: [require('tailwindcss-animate')]
