@@ -1,4 +1,7 @@
 'use client';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useCommentsQuery } from '@/lib/queries';
+import { formatAddress, formatDateToNow } from '@/lib/utils';
 import { CornerUpLeft, Heart } from 'lucide-react';
 import Image from 'next/image';
 
@@ -9,7 +12,44 @@ type CommentProps = {
   comment: string;
 };
 
-export default function Comment({ ...item }: CommentProps) {
+export default function Comments({ tokenId }: { tokenId: string }) {
+  const { data: comments, isLoading } = useCommentsQuery(tokenId);
+
+  if (isLoading) {
+    <section className="flex flex-col gap-4 py-10">
+      <div className="flex w-full flex-col items-start gap-4 self-stretch p-2 lg:p-4">
+        <Skeleton className="h-5 w-2/5" />
+        <Skeleton className="h-5 w-full" />
+      </div>
+    </section>;
+  }
+
+  return (
+    <section className="flex flex-col gap-4 py-10">
+      {comments &&
+        comments?.map(comment => {
+          return (
+            <Comment
+              key={comment.unique_id}
+              username={
+                comment.user.username
+                  ? comment.user.username
+                  : formatAddress(comment.user.wallet_address)
+              }
+              date={formatDateToNow(comment.created_at)}
+              avatar={
+                comment.user.profile_image ??
+                `https://avatar.vercel.sh/${comment.user.username}?size=150`
+              }
+              comment={comment.message}
+            />
+          );
+        })}
+    </section>
+  );
+}
+
+function Comment({ ...item }: CommentProps) {
   return (
     <div className="flex w-full flex-col items-start gap-4 self-stretch rounded border border-card-foreground bg-card p-2 lg:p-4">
       <div className="flex w-full items-center justify-between">

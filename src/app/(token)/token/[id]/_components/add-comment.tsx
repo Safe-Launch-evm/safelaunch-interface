@@ -61,7 +61,7 @@ export default function AddComment() {
   function addEmoji(emoji: { unified: string }) {
     const codePoints = emoji.unified.split('-').map(u => parseInt(u, 16));
     const emojiChar = String.fromCodePoint(...codePoints);
-    form.setValue('message', form.getValues('message') + emojiChar);
+    form.setValue('message', form.getValues('message') + emojiChar, { shouldValidate: true });
     setShowEmojiDialog(false);
   }
 
@@ -83,11 +83,11 @@ export default function AddComment() {
   return (
     <div className="w-full pt-6">
       <Form form={form} onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="relative flex w-full flex-col gap-4 rounded-lg border bg-input p-2 focus-within:ring-1 focus-within:ring-ring">
+        <div className="relative flex w-full flex-col gap-2 rounded-lg border bg-input p-2 focus-within:ring-1 focus-within:ring-ring">
           <Textarea
             id="message"
             placeholder="Type your message here..."
-            className="resize-none border-0 p-0 shadow-none focus:outline-none focus-visible:ring-0"
+            className="resize-none border-none p-0 shadow-none focus:border-none focus:outline-none focus:ring-transparent"
             {...form.register('message')}
           />
           <div className="relative flex items-center justify-end gap-4">
@@ -129,7 +129,7 @@ export default function AddComment() {
             </div>
           </div>
           {showEmojiDialog ? (
-            <div className="absolute right-0 top-[100%] mt-1">
+            <div className="absolute right-0 top-full mt-1">
               <Picker
                 data={data}
                 onEmojiSelect={addEmoji}

@@ -1,25 +1,21 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
 import { getCookieStorage } from '@/lib/cookie-storage';
+import { useFetchFavoritesQuery } from '@/lib/queries';
 import { _formatAddress, formatAddress } from '@/lib/utils';
 import { STATE_STATUS, Token, TokenLike } from '@/types';
 import { StarIcon } from '@heroicons/react/24/outline';
-import { CircleCheck, Copy, LoaderCircle, Star } from 'lucide-react';
+import { CircleCheck, Copy, LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { toast } from 'sonner';
 
-export default function TokenHeader({
-  token,
-  favorites
-}: {
-  token: Token;
-  favorites: TokenLike[] | null;
-}) {
-  const isLike = favorites?.find(favorite => favorite.token_id === token.unique_id);
+export default function TokenHeader({ token }: { token: Token }) {
+  const { data: tokens } = useFetchFavoritesQuery();
+
+  const isLike = tokens?.favorites?.find(favorite => favorite.token_id === token.unique_id);
 
   return (
     <div className="flex w-full flex-col items-start gap-6 md:h-auto">
