@@ -120,7 +120,7 @@ export default function WalletProvider(props: { children: React.ReactNode }) {
         </WalletModalContent>
       </WalletModal>
       <WalletModal open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
-        <WalletModalContent>
+        <WalletModalContent className="bg-card shadow-btn md:max-w-[454px] md:px-8 md:py-10">
           <AuthSignMessage />
         </WalletModalContent>
       </WalletModal>

@@ -95,12 +95,12 @@ export function BuyTokenForm({ token }: { token: Token }) {
           {...form.register('amount', { required: true })}
         />
       </div>
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between gap-1">
         {[10, 25, 50, 100].map(a => (
           <button
             key={a}
             type={'button'}
-            className="whitespace-nowrap rounded bg-card p-2 px-3 text-[1rem] font-light text-foreground/[0.50] saturate-200 transition-all ease-in hover:shadow-btn"
+            className="whitespace-nowrap rounded bg-card p-2 text-[1rem] font-light text-foreground/[0.50] saturate-200 transition-all ease-in hover:shadow-btn md:px-3"
             onClick={() => form.setValue('amount', `${a}`, { shouldValidate: true })}
           >
             {a} RWA

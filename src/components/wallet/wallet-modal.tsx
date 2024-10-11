@@ -125,7 +125,7 @@ const WalletModalBody = ({ className, children, ...props }: WalletModalProps) =>
   return (
     <ScrollArea
       className={cn(
-        'h-[234px] max-h-[300px] px-6 md:-mr-4 md:h-full md:min-h-[260px] md:px-0 md:pr-4',
+        'h-[234px] max-h-[730px] px-6 md:-mr-4 md:h-full md:min-h-[260px] md:px-0 md:pr-4',
         className
       )}
       {...props}

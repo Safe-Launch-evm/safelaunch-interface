@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-const imageSchema =
-  typeof File !== 'undefined'
-    ? z.instanceof(File).refine(file => file.size < 5 * 1024 * 1024, {
-        message: 'File size must be less than 5MB'
-      })
-    : z.any();
+// const imageSchema =
+//   typeof File !== 'undefined'
+//     ? z.instanceof(File).refine(file => file.size < 5 * 1024 * 1024, {
+//         message: 'File size must be less than 5MB'
+//       })
+//     : z.any();
 
 export const profileSchema = z.object({
   username: z
@@ -13,23 +13,15 @@ export const profileSchema = z.object({
     .min(3, {
       message: 'Username must be at least 3 characters long'
     })
-    .max(12, { message: "Username can't be longer than 12 characters" })
+    .max(8, { message: "Username can't be longer than 12 characters" })
     .regex(/^[a-zA-Z0-9_]+$/, {
       message: 'Username can only contain letters, numbers, and underscores'
     })
     .optional()
     .nullish(),
   bio: z.string().optional().nullish(),
-  image: z.any().optional().nullish(),
-  // image: z.any(
-  //   z
-  //     .instanceof(File)
-  //     .refine(file => file.size < 5 * 1024 * 1024, {
-  //       message: 'File size must be less than 5MB'
-  //     })
-  //     .optional()
-  //     .nullish()
-  // ),
+  telegram: z.string().optional().nullish(),
+  image: z.instanceof(File).optional().nullish(),
   profileImage: z.string().optional().nullish(),
   walletAddress: z.string()
 });
