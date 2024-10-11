@@ -52,7 +52,7 @@ export default function TransactionTable({ token }: { token: Token }) {
 
   return (
     // <ScrollArea className="h-[70vh] w-full">
-    <div className="w-full overflow-auto py-10">
+    <div className="w-full overflow-auto py-0 md:py-10">
       <Table>
         <TableHeader>
           <TableRow>

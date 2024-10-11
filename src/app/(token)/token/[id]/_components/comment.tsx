@@ -51,7 +51,7 @@ export default function Comments({ tokenId }: { tokenId: string }) {
 
 function Comment({ ...item }: CommentProps) {
   return (
-    <div className="flex w-full flex-col items-start gap-4 self-stretch rounded border border-card-foreground bg-card p-2 lg:p-4">
+    <div className="flex w-full flex-col items-start gap-4 self-stretch border-b border-border p-2 lg:p-4">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
           <Image
@@ -63,7 +63,7 @@ function Comment({ ...item }: CommentProps) {
             priority
           />
 
-          <span className="flex items-center justify-center rounded bg-accent px-2 py-[2px]">
+          <span className="flex items-center justify-center rounded bg-primary px-2 py-[2px]">
             {item.username}
           </span>
           <span className="font-light text-muted">{item.date}</span>

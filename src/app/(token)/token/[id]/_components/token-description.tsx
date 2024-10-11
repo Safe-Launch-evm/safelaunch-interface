@@ -87,7 +87,7 @@ const TokenStatsCard = ({ title, value }: { title: string; value: any }) => (
 export function TokenSocial({ token }: { token: Token }) {
   const socialLinks = JSON.parse(token.social_links);
   return (
-    <div className="flex items-center justify-center gap-3 self-stretch rounded border border-border px-[18px] py-3 md:px-6">
+    <div className="flex w-full items-center justify-center gap-2 rounded border border-border px-4 py-3 md:gap-3 md:px-6">
       <SocialIconLink href={socialLinks.discord ?? '/'} icon="discord" name="Discord" />
       <SocialIconLink
         href={socialLinks.twitter ?? `/token/${token.unique_id}`}

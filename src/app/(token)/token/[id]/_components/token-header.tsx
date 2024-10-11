@@ -41,11 +41,18 @@ export default function TokenHeader({ token }: { token: Token }) {
           </span>
           <span>
             <Link
-              className="text-[0.875rem] font-light hover:text-primary lg:text-[1rem]/[0.01rem]"
+              className="hidden text-[0.875rem] font-light hover:text-primary md:block lg:text-[1rem]/[0.01rem]"
               target="__blank__"
               href={`https://scan-testnet.assetchain.org/token/${token?.contract_address}`}
             >
               {token && _formatAddress(token?.contract_address, 16)}
+            </Link>
+            <Link
+              className="block text-[0.875rem] font-light hover:text-primary md:hidden lg:text-[1rem]/[0.01rem]"
+              target="__blank__"
+              href={`https://scan-testnet.assetchain.org/token/${token?.contract_address}`}
+            >
+              {token && formatAddress(token?.contract_address)}
             </Link>
           </span>
         </span>
@@ -73,7 +80,11 @@ export function CopyAddressButton({ contractAddress }: { contractAddress: string
 
   return (
     <button onClick={handleCopy}>
-      {copied ? <CircleCheck className="size-6" /> : <Copy className="size-6 text-primary" />}
+      {copied ? (
+        <CircleCheck className="size-6" />
+      ) : (
+        <Copy className="size-4 text-primary md:size-6" />
+      )}
     </button>
   );
 }

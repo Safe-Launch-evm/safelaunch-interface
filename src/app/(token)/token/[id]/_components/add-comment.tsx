@@ -65,21 +65,6 @@ export default function AddComment() {
     setShowEmojiDialog(false);
   }
 
-  // const custom = [
-  //   {
-  //     id: 'stickers',
-  //     name: 'Stickers',
-  //     emojis: [
-  //       {
-  //         id: `${symbol}`,
-  //         name: `${name}`,
-  //         keywords: ['stickers'],
-  //         skins: [{ src: `${image}` }]
-  //       }
-  //     ]
-  //   }
-  // ];
-
   return (
     <div className="w-full pt-6">
       <Form form={form} onSubmit={form.handleSubmit(onSubmit)}>

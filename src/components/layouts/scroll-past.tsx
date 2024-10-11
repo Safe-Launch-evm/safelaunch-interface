@@ -21,11 +21,7 @@ function ScrollItem() {
         TNM...s9T <span className="font-bold text-primary">Bought</span> 1,000.5 TRX of{' '}
       </p>
       <div className="ml-2 flex items-center">
-        <img
-          src="https://mrcally.com/recent-dp.jpeg"
-          alt="yuy"
-          className="mr-1 size-[21px] rounded"
-        />{' '}
+        <img src="/images/token-image.png" alt="yuy" className="mr-1 size-[21px] rounded" />{' '}
         <span>YSU</span>
       </div>
     </div>

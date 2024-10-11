@@ -1,6 +1,6 @@
 'use client';
 
-import type { Metadata } from 'next';
+// import type { Metadata } from 'next';
 import { Shell } from '@/components/shell';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TransactionTable from './_components/transaction-table';
@@ -11,11 +11,13 @@ import AddComment from './_components/add-comment';
 import { TokenCurveData } from './_components/token-curve-data';
 import TokenHeader from './_components/token-header';
 import TokenDescription, { TokenSocial } from './_components/token-description';
-import { TokenChart } from './_components/token-chart';
-import { useQuery } from '@tanstack/react-query';
+// import { TokenChart } from './_components/token-chart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTokenQuery } from '@/lib/queries';
 import Comments from './_components/comment';
+import { ReactNode, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // export async function generateMetadata({
 //   params
@@ -52,13 +54,13 @@ import Comments from './_components/comment';
 //   };
 // }
 
+interface ITabSection {
+  [key: string]: ReactNode;
+}
+
 export default function TokenPage({ params }: { params: { id: string } }) {
-  // const token = await fetchSingleToken(params.id);
-  // const comments = await fetchTokenComments(params.id);
-  // const data = await fetchTokenStats(token.unique_id);
-  // const priceHistory = await fetchTokenPriceHistory(token.unique_id);
-  // console.log({priceHistory})
-  // const { favorites } = await fetchTokens({ favorites: true });
+  const mobileTabs = ['details', 'chart', 'buy/sell'] as const;
+  const [mobileTab, setMobileTab] = useState<(typeof mobileTabs)[number]>('details');
 
   const { data: token, isLoading } = useTokenQuery(params.id);
 
@@ -72,7 +74,7 @@ export default function TokenPage({ params }: { params: { id: string } }) {
                 <Skeleton className="float-none h-[183px] w-full rounded md:size-[183px]" />
 
                 <div className="relative min-w-0 flex-auto space-y-[22px]">
-                  <Skeleton className="w-115px h-[18px]" />
+                  <Skeleton className="h-[18px] w-[115px]" />
 
                   <div className="flex flex-col gap-1">
                     <Skeleton className="h-1 w-full" />
@@ -105,38 +107,123 @@ export default function TokenPage({ params }: { params: { id: string } }) {
     return;
   }
 
+  const TokenDetail = () => (
+    <>
+      <TokenHeader token={token} />
+      <TokenSocial token={token} />
+      <TokenDescription token={token} />
+      <TokenCurveData token={token} />
+    </>
+  );
+  const TokenBuyAndSell = () => (
+    <>
+      <BuyAndSellCard token={token} />
+      <TokenSocial token={token} />
+      <div className="flex w-full flex-col items-start gap-6">
+        <span className="flex w-full border-b border-primary p-1 px-0 font-inter text-[1rem] font-medium">
+          Transactions
+        </span>
+        <TransactionTable token={token} />
+      </div>
+    </>
+  );
+
+  const TokenChartAndComments = () => (
+    <>
+      <div className="h-[440px] w-full rounded border border-border bg-card" />
+      <div className="w-full space-y-10">
+        <Tabs defaultValue="comments">
+          <TabsList variant={'centered'}>
+            <TabsTrigger variant={'centered'} value="comments">
+              Comments
+            </TabsTrigger>
+            <TabsTrigger variant={'centered'} value="transactions">
+              Transactions
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="comments">
+            <AddComment />
+            <Comments tokenId={token.unique_id} />
+          </TabsContent>
+          <TabsContent value="transactions">
+            <TransactionTable token={token} />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
+  );
+
+  const tabs: ITabSection = {
+    details: <TokenDetail />,
+    'buy/sell': <TokenBuyAndSell />,
+    chart: <TokenChartAndComments />
+  };
+
   return (
-    <Shell className="pt-[110px]">
-      {/* Desktop */}
-      <div className="grid grid-cols-1 grid-rows-[1fr_auto] gap-[42px] md:grid-cols-[2fr_1fr] md:grid-rows-1">
-        <div className="w-full space-y-10">
-          <TokenDescription token={token} />
-          {/* {priceHistory && <TokenChart history={priceHistory} />} */}
+    <>
+      <Shell className="hidden pt-[110px] md:grid">
+        {/* Desktop */}
+        <div className="grid grid-cols-1 grid-rows-[1fr_auto] gap-[42px] md:grid-cols-[2fr_1fr] md:grid-rows-1">
+          <div className="w-full space-y-10">
+            <TokenDescription token={token} />
+            {/* {priceHistory && <TokenChart history={priceHistory} />} */}
 
-          <div className="h-[440px] w-full rounded border border-border bg-card" />
+            <div className="h-[440px] w-full rounded border border-border bg-card" />
 
-          <TokenCurveData token={token} />
-          <Tabs defaultValue="comments">
-            <TabsList>
-              <TabsTrigger value="comments">Comments</TabsTrigger>
-              <TabsTrigger value="transactions">Transactions</TabsTrigger>
-            </TabsList>
-            <TabsContent value="comments">
-              <AddComment />
-              <Comments tokenId={token.unique_id} />
-            </TabsContent>
-            <TabsContent value="transactions">
-              <TransactionTable token={token} />
-            </TabsContent>
-          </Tabs>
+            <TokenCurveData token={token} />
+            <Tabs defaultValue="comments">
+              <TabsList>
+                <TabsTrigger value="comments">Comments</TabsTrigger>
+                <TabsTrigger value="transactions">Transactions</TabsTrigger>
+              </TabsList>
+              <TabsContent value="comments">
+                <AddComment />
+                <Comments tokenId={token.unique_id} />
+              </TabsContent>
+              <TabsContent value="transactions">
+                <TransactionTable token={token} />
+              </TabsContent>
+            </Tabs>
+          </div>
+          <div className="grid gap-6 md:sticky md:top-[110px] md:self-start">
+            <TokenHeader token={token} />
+            <BuyAndSellCard token={token} />
+            <TokenSocial token={token} />
+          </div>
         </div>
-        <div className="grid gap-6 md:sticky md:top-[110px] md:self-start">
-          <TokenHeader token={token} />
-          <BuyAndSellCard token={token} />
-          <TokenSocial token={token} />
+      </Shell>
+      {/* mobile */}
+      <div className="block w-full px-0 md:hidden">
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.div
+            key={mobileTab}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Shell variant={'mobile'}>{tabs[mobileTab]}</Shell>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="fixed bottom-0 left-0 flex h-fit w-screen items-center justify-between bg-background p-4">
+          {mobileTabs.map((tab, index) => (
+            <div
+              onClick={() => setMobileTab(tab)}
+              key={index}
+              className={cn(
+                'relative flex items-center justify-center px-3.5 py-2.5 text-sm font-bold capitalize transition-colors',
+                {
+                  'text-primary': tab === mobileTab,
+                  'text-[#767676]': tab !== mobileTab
+                }
+              )}
+            >
+              {tab}
+            </div>
+          ))}
         </div>
       </div>
-      {/* mobile */}
       {/* <section className="block w-full md:hidden">
         <TokenHeader token={token} favorites={favorites} />
 
@@ -200,6 +287,6 @@ export default function TokenPage({ params }: { params: { id: string } }) {
           </TabsContent>
         </Tabs>
       </section> */}
-    </Shell>
+    </>
   );
 }
