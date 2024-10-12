@@ -1,26 +1,38 @@
 'use client';
 
-import Link from 'next/link';
 import React, { useState, useTransition } from 'react';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Search, SortDescIcon } from 'lucide-react';
-import { useDebounce } from '@/hooks/use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useAccount } from 'wagmi';
+import { useDebounce } from '@/hooks/use-debounce';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 
 import {
   ListBulletIcon,
   Squares2X2Icon,
   BarsArrowDownIcon,
-  MagnifyingGlassIcon,
-  StarIcon
+  MagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
-import { SelectFilter } from './select-filter';
 
 type ToolbarProps = {
   currentTab: string;
 };
+
+const options = [
+  {
+    value: 'trending',
+    label: 'trending'
+  },
+  {
+    value: 'favorites',
+    label: 'favorites'
+  }
+];
 
 export default function TokenToolbar({ currentTab }: ToolbarProps) {
   const router = useRouter();
@@ -77,7 +89,8 @@ export default function TokenToolbar({ currentTab }: ToolbarProps) {
         />
       </div>
       <div className="flex w-full items-center justify-between gap-6 md:w-auto">
-        <SelectFilter />
+        {/* <SelectFilter /> */}
+        <FilterSelect options={options} placeholder={options[0].label} />
         <div className="flex h-10 gap-2 md:h-[52px]">
           <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-border">
             <ListBulletIcon className="size-5 text-muted" />
@@ -91,70 +104,31 @@ export default function TokenToolbar({ currentTab }: ToolbarProps) {
         </div>
       </div>
     </section>
-    // <section className="grid gap-4 lg:grid-cols-[2fr_1fr] lg:gap-8">
-    //   <div className="relative h-[52px] w-full">
-    //     <Search className="absolute left-4 top-4 size-5 text-primary" />
-    //     <input
-    //       type="search"
-    //       placeholder="Search Token"
-    //       className="w-full rounded-lg border border-border bg-card px-4 py-3 pl-11 font-inter text-[1.25rem] placeholder:text-[#CECECE] focus:outline-none"
-    //       value={search ?? ''}
-    //       onChange={(e: any) => setSearch(e.target.value)}
-    //     />
-    //   </div>
-    //   <div className="flex h-[52px] gap-3">
-    //     <div className="flex-1">
-    //       <select className="size-full rounded-[8px] border border-border bg-transparent">
-    //         <option>Market Cap</option>
-    //       </select>
-    //     </div>
-    //     <div className="flex h-full gap-2">
-    //       <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-border">
-    //         <ListBulletIcon className="size-5 text-muted" />
-    //       </button>
-    //       <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-muted">
-    //         <Squares2X2Icon className="size-5 text-muted" />
-    //       </button>
-    //       <button className="flex h-full w-[52px] items-center justify-center rounded-[8px] border border-muted">
-    //         <BarsArrowDownIcon className="size-5 text-muted" />
-    //       </button>
-    //     </div>
-    //   </div>
-    // </section>
   );
 }
+export interface SelectProps {
+  options?: { label: string; value: string }[];
+  placeholder: string;
+}
 
-// export const MainTab = ({ selected }: { selected: string }) => {
-//   const { address } = useAccount();
-//   const tabs = [
-//     'tokens',
-//     'favorites'
-//     // , 'following', 'scams'
-//   ];
-//   return (
-//     <>
-//       {tabs.map(tab => {
-//         const active = selected === tab;
-//         if (tab === 'favorites' && !address) {
-//           return null;
-//         }
-//         return (
-//           <Link
-//             href={`/?tab=${tab}`}
-//             key={tab}
-//             className={cn(
-//               buttonVariants({
-//                 variant: 'outline',
-//                 size: 'tab',
-//                 className: `capitalize ${active && 'border-primary text-primary'}`
-//               })
-//             )}
-//             scroll
-//           >
-//             {tab}
-//           </Link>
-//         );
-//       })}
-//     </>
-//   );
-// };
+const FilterSelect = ({ options, placeholder }: SelectProps) => {
+  // const [open, setOpen] = React.useState(false);
+  // const [value, setValue] = React.useState('trending');
+
+  return (
+    <Select>
+      <SelectTrigger className="h-10 w-full bg-transparent md:h-[52px] md:w-[196px]">
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {options?.map((option, index) => (
+            <SelectItem key={index} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+};
