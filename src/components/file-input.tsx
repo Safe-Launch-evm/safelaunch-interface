@@ -103,7 +103,7 @@ const FileInput = ({
   const TokenUpload = () => {
     if (file) {
       return (
-        <div className="flex w-full items-start justify-between gap-3 rounded-lg border border-primary p-6">
+        <div className="flex w-full items-start justify-between gap-3 rounded-lg border border-primary p-3 md:p-6">
           <div className="flex items-center gap-2">
             <div className="relative size-16 rounded">
               <div className="group absolute inset-0 flex items-center justify-center">

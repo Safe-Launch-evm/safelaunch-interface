@@ -17,6 +17,7 @@ import { useAccount } from 'wagmi';
 export default function SiteHeader() {
   const { isConnected } = useAccount();
   const { setOpen } = useContext(WalletContext);
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -33,7 +34,8 @@ export default function SiteHeader() {
     <>
       <header
         className={cn('fixed z-50 w-full bg-transparent', {
-          'bg-background': isScrolled
+          'bg-background': isScrolled,
+          'bg-background/95': pathname.includes('/profile')
         })}
       >
         <ScrollPast />

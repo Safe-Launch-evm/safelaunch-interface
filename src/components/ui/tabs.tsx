@@ -43,7 +43,7 @@ const tabTriggerVariants = cva('disabled:pointer-events-none disabled:opacity-50
   variants: {
     variant: {
       default:
-        'flex items-start justify-center border-b border-card-foreground  p-3 font-inter text-[1rem] text-muted data-[state=active]:border-primary data-[state=active]:text-primary',
+        'flex items-start justify-center border-b border-card  p-3 font-inter text-[1rem] text-muted data-[state=active]:border-primary data-[state=active]:text-primary',
       centered:
         'flex w-full items-center justify-center border-b border-card-foreground  p-3 font-inter text-[1rem] text-muted data-[state=active]:border-primary data-[state=active]:text-primary',
       pill: 'flex size-full items-center justify-center gap-2 rounded-lg bg-transparent p-3 text-[1.25rem] font-bold text-[#3E3E3E] data-[state=active]:bg-foreground data-[state=active]:text-[#3E3E3E] lg:text-[1.5rem]',

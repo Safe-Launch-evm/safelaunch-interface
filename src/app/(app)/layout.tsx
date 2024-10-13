@@ -8,7 +8,7 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: Readonly<AppLayoutProps>) {
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-[url('/images/blur_bg.svg')] bg-cover bg-center bg-no-repeat">
+    <div className="relative flex min-h-screen w-full flex-col md:bg-[url('/background.png')] md:bg-cover md:bg-center md:bg-no-repeat">
       <SiteHeader />
       <main className="flex-1">{children}</main>
     </div>

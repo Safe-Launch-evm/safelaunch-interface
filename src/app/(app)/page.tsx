@@ -101,7 +101,7 @@ export default function Home({ searchParams }: HomeProps) {
       <TokenToolbar currentTab={currentTab} />
       {/* <Tokens currentTab={currentTab} searchParams={searchParams} /> */}
 
-      <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+      <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
         {tokens ? (
           <>
             {tokens.length >= 1 ? (

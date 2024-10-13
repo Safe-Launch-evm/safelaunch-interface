@@ -13,7 +13,7 @@ export const createTokenSchema = z.object({
     .string()
     .min(1, { message: 'Provide a symbol for token' })
     .max(6, { message: "Symbol can't be more than 6 characters" }),
-  liquidityAmount: z.string().optional(),
+  liquidityAmount: z.string(),
   totalSupply: z.string().optional(),
   image: z.instanceof(File),
   // image: z.any(

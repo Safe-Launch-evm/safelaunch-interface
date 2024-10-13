@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { LoaderCircle, Star } from 'lucide-react';
 import { AspectRatio } from '../ui/aspect-ratio';
@@ -9,7 +8,7 @@ import { PlaceholderImage } from '../placeholder-image';
 import Link from 'next/link';
 import { formatAddress, truncate } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { STATE_STATUS } from '@/types';
 import { deleteFavoriteToken, favoriteToken } from '@/lib/actions/token';
 import { toast } from 'sonner';
@@ -23,7 +22,6 @@ type TokenCardProps = {
   name: string;
   symbol: string;
   image: string;
-  owner?: string;
   market_cap: any;
   user?: object;
   creator_unique_id: string;
@@ -31,19 +29,7 @@ type TokenCardProps = {
 
 export default function TokenCard({ ...token }: TokenCardProps) {
   const router = useRouter();
-  const ref = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
   const [status, setStatus] = useState(STATE_STATUS.IDLE);
-
-  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
-    const rect = ref.current?.getBoundingClientRect();
-    if (rect) {
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      setMousePosition({ x, y });
-    }
-  }
 
   async function addToFavorite() {
     const isAuth = await getCookieStorage('auth_token');
@@ -105,23 +91,8 @@ export default function TokenCard({ ...token }: TokenCardProps) {
   }
 
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ scale: 1.03 }}
-      className="relative rounded-lg bg-card shadow-md shadow-card"
-    >
-      <div
-        className="absolute inset-0 z-0 transition-opacity duration-300 ease-in-out"
-        style={{
-          background: `radial-gradient(circle 150px at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.2), transparent 80%)`,
-          opacity: isHovered ? 1 : 0,
-          pointerEvents: 'none'
-        }}
-      />
-      <Link href={`/token/${token.unique_id}`} className="relative w-full">
+    <div className="relative rounded-lg bg-card shadow-md shadow-card">
+      <Link href={`/token/${token.unique_id}`} className="relative">
         <div className="aspect-square h-[197px] rounded-t-lg bg-card">
           <ImageComponent
             src={token.image}
@@ -147,12 +118,6 @@ export default function TokenCard({ ...token }: TokenCardProps) {
                 ${token.symbol}
               </span>
             </div>
-            <p className="text-[0.875rem] font-light text-slate-400 md:text-[1rem]">
-              Created by{' '}
-              <Link href={`/profile/${token.creator_unique_id}`}>
-                {truncate(token.owner!, 10) ?? 'view'}
-              </Link>
-            </p>
           </div>
           <div className="flex w-full flex-col gap-2.5">
             <div>
@@ -164,6 +129,6 @@ export default function TokenCard({ ...token }: TokenCardProps) {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

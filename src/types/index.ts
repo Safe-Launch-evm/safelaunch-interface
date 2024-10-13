@@ -85,6 +85,18 @@ export type TokenLike = {
     symbol: string;
     logo_url: string;
     creator_id: string;
+    stats: {
+      marketStats: {
+        priceInUsd: number;
+        circulatingSupplyInToken: number;
+        marketcapInUsd: number;
+        liquidityInUsd: number;
+      };
+      curveStats: {
+        targetRwaLiquidity: number;
+        currentRwaLiquidity: string;
+      };
+    };
   };
 };
 
