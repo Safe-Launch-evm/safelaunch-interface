@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
 import { useEffect, useState } from 'react';
-import SafeLaunch from '@/contract-w/safe-launch';
+import SafeLaunch from '@/contract/safe-launch';
 import { SwapTokenInput, swapTokenSchema } from '@/lib/validations/swap-token-schema';
 import { STATE_STATUS, Token } from '@/types';
 import { ArrowBigDown, LoaderCircle } from 'lucide-react';
@@ -13,7 +13,7 @@ import { Hex, createWalletClient, custom } from 'viem';
 import { toast } from 'sonner';
 import NumberInput from '@/components/number-input';
 import { useRouter } from 'next/navigation';
-import { getTokenBalance } from '@/contract-w/utils';
+import { getTokenAddress, getTokenBalance } from '@/contract/utils';
 import { toIntNumberFormat } from '@/lib/utils';
 
 export function SellTokenForm({ token }: { token: Token }) {
@@ -43,7 +43,8 @@ export function SellTokenForm({ token }: { token: Token }) {
     setWalletClient(client);
 
     const getData = async () => {
-      const bal = await getTokenBalance(token.contract_address, address as Hex);
+      const tokenAddress = (await getTokenAddress(token.contract_address)) as string;
+      const bal = await getTokenBalance(tokenAddress, address as Hex);
       setTokenBalance(bal);
     };
 
@@ -83,8 +84,8 @@ export function SellTokenForm({ token }: { token: Token }) {
       const formattedAmount = parseFloat(data.amount.replace(/,/g, ''));
       const safeLaunch = new SafeLaunch(walletClient, address);
       const reciept = await safeLaunch.sellToken(
-        token?.contract_address as Hex,
-        String(formattedAmount)
+        String(formattedAmount),
+        token?.contract_address as Hex
       );
 
       if (!reciept?.ok) {
@@ -127,7 +128,7 @@ export function SellTokenForm({ token }: { token: Token }) {
             </div>
           </div>
           <span className="flex font-inter text-[1rem] text-primary">
-             {tokenBalance && `Balance: ${toIntNumberFormat(Number(tokenBalance))}`}
+            {tokenBalance && `Balance: ${toIntNumberFormat(Number(tokenBalance))}`}
           </span>
         </div>
         <NumberInput

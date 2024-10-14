@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
-import SafeLaunch from '@/contract-w/safe-launch';
+import SafeLaunch from '@/contract/safe-launch';
 import { SwapTokenInput, swapTokenSchema } from '@/lib/validations/swap-token-schema';
 // import { useFormik } from 'formik';
 import { STATE_STATUS, Token } from '@/types';
@@ -21,7 +21,7 @@ export function BuyTokenForm({ token }: { token: Token }) {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const rwaBalance = useBalance({ address });
-  console.log({ rwaBalance });
+  // console.log({ rwaBalance });
   const [status, setStatus] = useState<STATE_STATUS>(STATE_STATUS.IDLE);
   const [walletClient, setWalletClient] = useState<any>();
 
@@ -49,8 +49,8 @@ export function BuyTokenForm({ token }: { token: Token }) {
 
       const safeLaunch = new SafeLaunch(walletClient, address);
       const reciept = await safeLaunch.buyToken(
-        token?.contract_address,
-        String(formattedAmount)
+        String(formattedAmount),
+        token?.contract_address
       );
       if (!reciept?.ok) {
         throw new Error(reciept.data);

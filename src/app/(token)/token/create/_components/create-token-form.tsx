@@ -77,7 +77,6 @@ export default function CreateTokenFrom() {
         liquidityAmount: String(liquidityAmount)
       };
 
-      console.log('token created');
 
       const result = await createToken({ ...newData });
 

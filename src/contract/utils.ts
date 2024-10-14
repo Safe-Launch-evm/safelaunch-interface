@@ -66,8 +66,38 @@ export async function getTokenSupplyInExchange(tokenAddress: string, exchangeAdd
     args: [exchangeAddress]
   })
 
-  // console.log({ balance: formatUnits(BigInt(Number(balance)), 18) })
   return formatUnits(BigInt(Number(balance)), 18);
+}
+
+export async function getTokenBalance(tokenAddress: string, userAddress: string) {
+
+  const publicClient = createPublicClient({
+    chain: assetChainTestnet,
+    transport: http(RPC_URL)
+  });
+
+  const balance = await publicClient.readContract({
+    address: tokenAddress as Hex,
+    abi: SafeLaunchERC20Abi,
+    functionName: 'balanceOf',
+    args: [userAddress]
+  });
+  return formatUnits(BigInt(Number(balance)), 18);
+}
+
+export async function getTokenAddress(exchangeAddress: string) {
+
+  const publicClient = createPublicClient({
+    chain: assetChainTestnet,
+    transport: http(RPC_URL)
+  });
+
+  const tokenAddress = await publicClient.readContract({
+    address: exchangeAddress as Hex,
+    abi: SafeLaunchAbi,
+    functionName: 'token',
+  })
+  return tokenAddress
 }
 
 
