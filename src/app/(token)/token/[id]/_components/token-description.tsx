@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import ImageComponent from '@/components/image-component';
 import { SocialIcon, SocialIconType } from '@/components/social-icons';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTokenStatsQuery } from '@/lib/queries';
@@ -16,11 +17,22 @@ export default function TokenDescription({ token }: { token: Token }) {
   return (
     <div className="flex w-full flex-col items-start gap-10 rounded border border-border bg-card px-4 py-6">
       <div className="flex flex-col items-start space-y-4 md:flex-row md:space-x-4">
-        <img
+        <div className="relative">
+          <div className="aspect-square h-[317px] md:h-[183px]">
+            <ImageComponent
+              src={token.logo_url}
+              alt={token.name}
+              className="rounded border border-[#3E3E3E] object-cover"
+              fill
+            />
+          </div>
+        </div>
+
+        {/* <img
           src={'/images/token-image.png'}
           alt={token.symbol}
           className="float-none h-[183px] w-full rounded border border-[#3E3E3E] bg-[#3E3E3E] object-cover md:size-[183px]"
-        />
+        /> */}
 
         <div className="relative min-w-0 flex-auto space-y-[22px]">
           <h4>Description</h4>

@@ -27,6 +27,7 @@ export default function CreateTokenFrom() {
   const { setOpen } = useContext(WalletContext);
   const [status, setStatus] = useState<STATE_STATUS>(STATE_STATUS.IDLE);
   const [walletClient, setWalletClient] = useState<any>();
+  const [tokenId, setTokenId] = useState<any>();
   const [formInputData, setFormInputData] = useState<any>();
 
   const form = useZodForm({
@@ -53,30 +54,23 @@ export default function CreateTokenFrom() {
 
     const formattedAmount = parseFloat(liquidityAmount.replace(/,/g, ''));
     try {
-      let logoUrl = '';
-
       const formData = new FormData();
       formData.append('image', data.image);
-      // formData.append('folder', '');
 
       const uploaded = await uploadLogo(formData);
       if (uploaded.status !== 201) {
         throw new Error('Image upload failed');
       }
-      logoUrl = uploaded.result.url;
-
-      form.setValue('logoUrl', logoUrl);
+      data.logoUrl = uploaded.result.url;
 
       const safelaunch = new SafeLaunch(walletClient, address);
-      const reciept = await safelaunch.createToken(name, symbol, String(formattedAmount));
+      const receipt = await safelaunch.createToken(name, symbol, String(formattedAmount));
 
-      if (!reciept?.ok) throw new Error(reciept.data);
+      if (!receipt?.ok) {
+        throw new Error(receipt.data || 'Token creation failed');
+      }
 
-      // console.log('{error}', address, isConnected, reciept);
-      form.setValue('contractAddress', reciept.data.log.args.token);
-
-      // Revalidate the form
-      await form.trigger();
+      data.contractAddress = receipt.data.log.args.token;
 
       const result = await createToken({
         ...data,
@@ -84,11 +78,10 @@ export default function CreateTokenFrom() {
       });
 
       if (!result) {
-        setStatus(STATE_STATUS.ERROR);
         throw new Error('Creating token failed');
       }
-      setFormInputData({ ...data, tokenId: result.result.unique_id });
-      // formInputData.tokenId = result.result.unique_id;
+
+      setTokenId(result.result.unique_id);
       setStatus(STATE_STATUS.SUCCESS);
     } catch (error: any) {
       console.log({ error });
@@ -99,7 +92,7 @@ export default function CreateTokenFrom() {
   }
 
   if (status === STATE_STATUS.LOADING || status === STATE_STATUS.SUCCESS) {
-    return <SuccessLoadingModal loading={status} data={formInputData} />;
+    return <SuccessLoadingModal loading={status} data={form.getValues()} tokenId={tokenId} />;
   }
 
   return (
@@ -177,7 +170,15 @@ export default function CreateTokenFrom() {
   );
 }
 
-function SuccessLoadingModal({ loading, data }: { loading: STATE_STATUS; data: any }) {
+function SuccessLoadingModal({
+  loading,
+  data,
+  tokenId
+}: {
+  loading: STATE_STATUS;
+  tokenId: string;
+  data: CreateTokenInput;
+}) {
   return (
     <section className="w-full border-border px-4 md:w-[518px] md:rounded-lg md:border md:bg-card md:px-8 md:py-10">
       <div className="flex w-full flex-col items-center justify-center gap-10">
@@ -204,7 +205,7 @@ function SuccessLoadingModal({ loading, data }: { loading: STATE_STATUS; data: a
           <span>Creating token ....</span>
         ) : (
           <Button asChild className="text-[1.125rem] font-medium" fullWidth>
-            <Link href={`/token/${data.tokenId}`}>View token</Link>
+            <Link href={`/token/${tokenId}`}>View token</Link>
           </Button>
         )}
       </div>

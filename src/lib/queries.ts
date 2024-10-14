@@ -46,3 +46,23 @@ export function useUserTokens(userId: string) {
     queryKey: ['userTokens']
   });
 }
+
+export function useFetchAllTokensQuery({
+  favorites,
+  trending,
+  search
+}: {
+  favorites?: boolean;
+  trending?: boolean;
+  search?: string;
+}) {
+  return useQuery({
+    queryKey: ['tokens', { favorites, trending, search: search }],
+    queryFn: () =>
+      fetchTokens({
+        favorites,
+        trending,
+        search: search
+      })
+  });
+}

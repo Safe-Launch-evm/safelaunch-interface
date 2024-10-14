@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useQuery } from '@tanstack/react-query';
 import { formatAddress, toIntNumberFormat } from '@/lib/utils';
 import { useAccount } from 'wagmi';
+import { EmptyStateMessage } from './_components/all-token-tokens-list';
 // import Tokens from './_components/tokens';
 
 type HomeProps = {
@@ -28,7 +29,7 @@ export default function Home({ searchParams }: HomeProps) {
 
   // const fetchUserTokenPromise = fetchTokens({ favorites: true });
 
-  const { data, isLoading, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['tokens', { favorites, trending, search: searchParams.search }],
     queryFn: () =>
       fetchTokens({
@@ -101,7 +102,7 @@ export default function Home({ searchParams }: HomeProps) {
       <TokenToolbar currentTab={currentTab} />
       {/* <Tokens currentTab={currentTab} searchParams={searchParams} /> */}
 
-      <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
+      <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
         {tokens ? (
           <>
             {tokens.length >= 1 ? (
@@ -128,10 +129,12 @@ export default function Home({ searchParams }: HomeProps) {
                 );
               })
             ) : (
-              <div></div>
+              <EmptyStateMessage />
             )}
           </>
-        ) : null}
+        ) : (
+          <EmptyStateMessage />
+        )}
         {likes ? (
           <>
             {likes?.length >= 1 ? (
@@ -150,7 +153,7 @@ export default function Home({ searchParams }: HomeProps) {
                 );
               })
             ) : (
-              <div></div>
+              <EmptyStateMessage />
             )}
           </>
         ) : null}
