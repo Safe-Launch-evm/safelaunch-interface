@@ -157,7 +157,7 @@ function WalletConnectors() {
           Connect your Web3 wallet or create a new one.
         </WalletModalDescription>
       </WalletModalHeader>
-      <WalletModalBody className="h-[492px] md:h-auto">
+      <WalletModalBody className="h-auto">
         {context.pendingConnector ? <WalletConnecting /> : <WalletOptions />}
       </WalletModalBody>
       <WalletModalFooter>

@@ -1,7 +1,7 @@
 'use client';
 
 import FileInput from '@/components/file-input';
-import NumberInput from '@/components/number-input';
+// import NumberInput from '@/components/number-input';
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -28,12 +28,12 @@ export default function CreateTokenFrom() {
   const { setOpen } = useContext(WalletContext);
   const [status, setStatus] = useState<STATE_STATUS>(STATE_STATUS.IDLE);
   const [walletClient, setWalletClient] = useState<any>();
-  const [tokenId, setTokenId] = useState<any>();
+  const [token, setToken] = useState<any>();
   const [formInputData, setFormInputData] = useState<any>();
 
   const form = useZodForm({
     schema: createTokenSchema,
-    defaultValues: { contractAddress: address, totalSupply: '1000000000', logoUrl: '' }
+    defaultValues: { totalSupply: '1000000000' }
   });
 
   useEffect(() => {
@@ -62,27 +62,34 @@ export default function CreateTokenFrom() {
       if (uploaded.status !== 201) {
         throw new Error('Image upload failed');
       }
-      data.logoUrl = uploaded.result.url;
+      // data.logoUrl = uploaded.result.url;
 
       const safelaunch = new SafeLaunch(walletClient, address);
       const receipt = await safelaunch.createToken(name, symbol, String(formattedAmount));
-
+      console.log('Launch contract');
       if (!receipt?.ok) {
         throw new Error(receipt.data || 'Token creation failed');
       }
 
-      data.contractAddress = receipt.data.log.args.token;
-
-      const result = await createToken({
+      // data.contractAddress = receipt.data.log.args.token;
+      console.log('contract complete');
+      const newData = {
         ...data,
+        logoUrl: uploaded.result.url,
+        contractAddress: receipt.data.log.args.token,
         liquidityAmount: String(liquidityAmount)
-      });
+      };
+      const result = await createToken({ ...newData });
+      console.log('upload complete');
 
       if (!result) {
         throw new Error('Creating token failed');
       }
 
-      setTokenId(result.result.unique_id);
+      setToken({
+        tokenId: result.result.unique_id,
+        logoUrl: newData.logoUrl
+      });
       setStatus(STATE_STATUS.SUCCESS);
     } catch (error: any) {
       console.log({ error });
@@ -93,7 +100,7 @@ export default function CreateTokenFrom() {
   }
 
   if (status === STATE_STATUS.LOADING || status === STATE_STATUS.SUCCESS) {
-    return <SuccessLoadingModal loading={status} data={form.getValues()} tokenId={tokenId} />;
+    return <SuccessLoadingModal loading={status} data={form.getValues()} tokenId={token} />;
   }
 
   return (
@@ -122,14 +129,20 @@ export default function CreateTokenFrom() {
           helpertext="200 max"
           {...form.register('description')}
         />
-        <NumberInput
+        <Input
+          label="Supply"
+          placeholder="0.0"
+          type="text"
+          {...form.register('liquidityAmount')}
+        />
+        {/* <NumberInput
           label="Supply"
           placeholder="0.0"
           thousandSeparator=","
           {...form.register('liquidityAmount')}
           allowNegative={false}
           className="flex w-full rounded-lg border bg-input p-4 font-inter text-[1.25rem] font-normal text-foreground file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#848E9C] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        />
+        /> */}
         <Input
           label="Website"
           type="text"
@@ -177,7 +190,7 @@ function SuccessLoadingModal({
   tokenId
 }: {
   loading: STATE_STATUS;
-  tokenId: string;
+  tokenId: any;
   data: CreateTokenInput;
 }) {
   return (
@@ -195,7 +208,7 @@ function SuccessLoadingModal({
           </span>
         ) : (
           <Image
-            src={data?.logoUrl}
+            src={tokenId?.logoUrl}
             alt=""
             width={180}
             height={180}
@@ -206,7 +219,7 @@ function SuccessLoadingModal({
           <span>Creating token ....</span>
         ) : (
           <Button asChild className="text-[1.125rem] font-medium" fullWidth>
-            <Link href={`/token/${tokenId}`}>View token</Link>
+            <Link href={`/token/${tokenId.tokenId}`}>View token</Link>
           </Button>
         )}
       </div>

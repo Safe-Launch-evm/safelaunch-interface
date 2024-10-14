@@ -21,8 +21,8 @@ export const createTokenSchema = z.object({
   //     message: 'File size must be less than 5MB'
   //   })
   // ),
-  logoUrl: z.string(),
-  contractAddress: z.string(),
+  // logoUrl: z.string(),
+  // contractAddress: z.string(),
   description: z.string(),
   socialLinks: socialLinksSchema
 });
