@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
 import { useEffect, useState } from 'react';
-import SafeLaunch from '@/contract/safe-launch';
+import SafeLaunch from '@/contract-w/safe-launch';
 import { SwapTokenInput, swapTokenSchema } from '@/lib/validations/swap-token-schema';
 import { STATE_STATUS, Token } from '@/types';
 import { ArrowBigDown, LoaderCircle } from 'lucide-react';
@@ -13,7 +13,7 @@ import { Hex, createWalletClient, custom } from 'viem';
 import { toast } from 'sonner';
 import NumberInput from '@/components/number-input';
 import { useRouter } from 'next/navigation';
-import { getTokenBalance } from '@/contract/utils';
+import { getTokenBalance } from '@/contract-w/utils';
 import { toIntNumberFormat } from '@/lib/utils';
 
 export function SellTokenForm({ token }: { token: Token }) {

@@ -10,7 +10,7 @@ import { useWallet } from '@/components/wallet/wallet-connect';
 import { WalletContext } from '@/context/wallet-context';
 import { CreateTokenInput, createTokenSchema } from '@/lib/validations/create-token-schema';
 import { CloudArrowDownIcon } from '@heroicons/react/24/outline';
-import SafeLaunch from '@/contract/safe-launch';
+// import SafeLaunch from '@/contract-w/safe-launch';
 import { assetChainTestnet } from 'viem/chains';
 import { createWalletClient, custom } from 'viem';
 
@@ -21,6 +21,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { createToken, uploadLogo } from '@/lib/actions/token';
 import { toast } from 'sonner';
+import SafeLaunch from '@/contract/safe-launch';
 
 export default function CreateTokenFrom() {
   const { isConnected, address } = useAccount();

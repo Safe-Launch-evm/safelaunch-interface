@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import Form, { useZodForm } from '@/components/ui/form';
-import SafeLaunch from '@/contract/safe-launch';
+import SafeLaunch from '@/contract-w/safe-launch';
 import { SwapTokenInput, swapTokenSchema } from '@/lib/validations/swap-token-schema';
 // import { useFormik } from 'formik';
 import { STATE_STATUS, Token } from '@/types';

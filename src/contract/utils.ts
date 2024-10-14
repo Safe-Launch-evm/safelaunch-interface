@@ -1,102 +1,111 @@
-import { AbiEvent, Hex, PublicClient, createPublicClient, formatEther, formatUnits, getContract, http } from 'viem';
-import UniswapV3FactoryAbi from './abi/UniswapV3Factory.json';
-import UniswapV3PoolAbi from './abi/UniswapV3Pool.json';
-import TokenAbi from './abi/Token.json';
 import { assetChainTestnet } from 'viem/chains';
+import SafeLaunchAbi from './abi/SafeLaunch.json';
+import SafeLaunchERC20Abi from './abi/SafeLaunchERC20.json';
+import { AbiEvent, Hex, createPublicClient, createWalletClient, formatEther, formatUnits, http } from "viem";
+// import Setting from 'App/models/Setting';
+import { privateKeyToAccount } from 'viem/accounts';
 
-export const FACTORY_ADDRESS = '0xf509c3FbbBa099cD5D949C6621C218B3E52670F8';
-export const WRWA_ADDRESS = '0x0FA7527F1050bb9F9736828B689c652AB2c483ef';
-export const POOL_FEE = '500';
 
-export const PRICING_CURVE_TARGET = 200; // 200 RWA
-export const SAFE_LAUNCH_ADDRESS = '0x2B7C1342Cc64add10B2a79C8f9767d2667DE64B2';
 export const RPC_URL = 'https://enugu-rpc.assetchain.org';
-export const AddLiquidityAbi: AbiEvent = {
-  anonymous: false,
-  inputs: [
-    { indexed: true, internalType: 'address', name: 'token', type: 'address' },
-    { indexed: false, internalType: 'uint256', name: 'poolFee', type: 'uint256' },
-    { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
-    { indexed: false, internalType: 'address', name: 'user', type: 'address' }
-  ],
-  name: 'AddLiquidity',
-  type: 'event'
-};
 
-export async function getPoolAddress(
-  publicClient: PublicClient,
-  tokenAddress: string
-): Promise<string> {
-  const [tokenA, tokenB] =
-    WRWA_ADDRESS.toLowerCase() < tokenAddress.toLowerCase()
-      ? [WRWA_ADDRESS, tokenAddress]
-      : [tokenAddress, WRWA_ADDRESS];
+export const publicClient = createPublicClient({
+  chain: assetChainTestnet,
+  transport: http(RPC_URL)
+})
 
-  const pool = await publicClient.readContract({
-    address: FACTORY_ADDRESS,
-    abi: UniswapV3FactoryAbi,
-    functionName: 'getPool',
-    args: [tokenA, tokenB, POOL_FEE]
-  });
-  return String(pool);
-}
+export async function initWalletClient() {
+  if (!process.env.OWNER_PRV_KEY)
+    throw new Error('Private key is not defined.');
 
-export async function getCurrentPrice(publicClient: PublicClient, tokenAddress: string) {
-  let poolAddress = await getPoolAddress(publicClient, tokenAddress);
+  const ACCOUNT = privateKeyToAccount(`0x${process.env.OWNER_PRV_KEY}` as Hex);
 
-  const slot0 = (await publicClient.readContract({
-    address: poolAddress as Hex,
-    abi: UniswapV3PoolAbi,
-    functionName: 'slot0'
-  })) as Array<number>;
-
-  const sqrtPriceX96 = slot0[0];
-  const price = (Number(sqrtPriceX96) / 2 ** 96) ** 2; // price of tokenB per tokenA
-  return price;
-}
-
-export async function getTokenSupplyInPool(publicClient: PublicClient, tokenAddress: string) {
-  let poolAddress = await getPoolAddress(publicClient, tokenAddress);
-
-  const balance = await publicClient.readContract({
-    address: tokenAddress as Hex,
-    abi: TokenAbi,
-    functionName: 'balanceOf',
-    args: [poolAddress]
-  });
-
-  // console.log({ balance: formatUnits(BigInt(Number(balance)), 18) })
-  return formatUnits(BigInt(Number(balance)), 18);
-}
-
-export async function getTokenBalance(tokenAddress: string, userAddress: string) {
-
-  const publicClient = createPublicClient({
+  const walletClient = createWalletClient({
+    account: ACCOUNT,
     chain: assetChainTestnet,
-    transport: http(RPC_URL)
+    transport: http(RPC_URL),
   });
+  return walletClient;
+}
 
+export async function getMarketCap(exchangeAddress: string) {
+  const marketCap = await publicClient.readContract({
+    address: exchangeAddress as Hex,
+    abi: SafeLaunchAbi,
+    functionName: 'marketCap',
+  })
+
+  return marketCap;   // mcap in usd
+}
+
+export async function getMarketCapThreshold(exchangeAddress: string) {
+  const target = await publicClient.readContract({
+    address: exchangeAddress as Hex,
+    abi: SafeLaunchAbi,
+    functionName: 'marketCapThreshold',
+  })
+
+  return target;   // mcap in usd
+}
+
+export async function getTokenPriceinRWA(exchangeAddress: string) {
+  const priceInRwa = await publicClient.readContract({
+    address: exchangeAddress as Hex,
+    abi: SafeLaunchAbi,
+    functionName: 'getTokenPriceinRWA',
+  })
+  console.log({ priceInRwa })
+  return priceInRwa as unknown as bigint;   // price in rwa
+}
+
+
+export async function getTokenSupplyInExchange(tokenAddress: string, exchangeAddress: string) {
   const balance = await publicClient.readContract({
     address: tokenAddress as Hex,
-    abi: TokenAbi,
+    abi: SafeLaunchERC20Abi,
     functionName: 'balanceOf',
-    args: [userAddress]
-  });
-console.log({balance})
+    args: [exchangeAddress]
+  })
+
+  // console.log({ balance: formatUnits(BigInt(Number(balance)), 18) })
   return formatUnits(BigInt(Number(balance)), 18);
 }
 
 
-export async function getWRWASupplyInPool(publicClient: PublicClient, tokenAddress: string) {
-  let poolAddress = await getPoolAddress(publicClient, tokenAddress);
+export async function getRWASupplyInExchange(exchangeAddress: string) {
+  const balance = await publicClient.getBalance({ address: exchangeAddress as Hex });
+  // Format the balance from Wei to Ether
+  const balanceInEther = formatEther(balance);
+  return balanceInEther;
+}
 
-  const balance = await publicClient.readContract({
-    address: WRWA_ADDRESS as Hex,
-    abi: TokenAbi,
-    functionName: 'balanceOf',
-    args: [poolAddress]
-  });
+// export async function convertRwaToUsd(amountInRwa: number) {
+//   let setting = await Setting.query()
+//   let amountInUsd = (amountInRwa * Number(setting[0].usdPricePerRwa)) / 1;
+//   return amountInUsd;
+// }
 
-  // console.log({ balance: formatUnits(BigInt(Number(balance)), 18) })
-  return formatUnits(BigInt(Number(balance)), 18);
+export const TokenDeployedAbi: AbiEvent = {
+  "anonymous": false,
+  "inputs": [
+    {
+      "indexed": false,
+      "internalType": "address",
+      "name": "tokenAddress",
+      "type": "address"
+    },
+    {
+      "indexed": false,
+      "internalType": "address",
+      "name": "safeLaunchAddress",
+      "type": "address"
+    },
+    {
+      "indexed": false,
+      "internalType": "address",
+      "name": "creator",
+      "type": "address"
+    }
+  ],
+  "name": "TokenDeployed",
+  "type": "event"
 }
