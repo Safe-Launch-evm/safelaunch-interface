@@ -124,7 +124,7 @@ export default function Home({ searchParams }: HomeProps) {
                         ? token.creator.username
                         : formatAddress(token.creator.wallet_address)
                     }
-                    market_cap={toIntNumberFormat(token?.stats?.marketStats?.marketcapInUsd)}
+                    market_cap={(token?.stats?.marketStats?.marketcapInUsd)}
                   />
                 );
               })

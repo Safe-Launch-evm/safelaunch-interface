@@ -62,25 +62,24 @@ export default function CreateTokenFrom() {
       if (uploaded.status !== 201) {
         throw new Error('Image upload failed');
       }
-      // data.logoUrl = uploaded.result.url;
 
       const safelaunch = new SafeLaunch(walletClient, address);
       const receipt = await safelaunch.createToken(name, symbol, String(formattedAmount));
-      console.log('Launch contract');
+
       if (!receipt?.ok) {
         throw new Error(receipt.data || 'Token creation failed');
       }
 
-      // data.contractAddress = receipt.data.log.args.token;
-      console.log('contract complete');
       const newData = {
         ...data,
         logoUrl: uploaded.result.url,
-        contractAddress: receipt.data.log.args.token,
+        contractAddress: receipt.data.log.args.safeLaunchAddress,
         liquidityAmount: String(liquidityAmount)
       };
+
+      console.log('token created');
+
       const result = await createToken({ ...newData });
-      console.log('upload complete');
 
       if (!result) {
         throw new Error('Creating token failed');

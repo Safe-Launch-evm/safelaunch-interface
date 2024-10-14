@@ -47,7 +47,7 @@ export default function TokenDescription({ token }: { token: Token }) {
             isTokenStatsLoading ? (
               <Skeleton className="h-[22px] w-full md:w-[119px]" />
             ) : (
-              `${toIntNumberFormat(tokenStats?.marketStats.priceInUsd)} USD`
+              `${(tokenStats?.marketStats.priceInUsd)} USD`
             )
           }
         />
@@ -58,7 +58,7 @@ export default function TokenDescription({ token }: { token: Token }) {
             isTokenStatsLoading ? (
               <Skeleton className="h-[22px] w-full md:w-[119px]" />
             ) : (
-              `${toIntNumberFormat(tokenStats?.marketStats.marketcapInUsd)} USD`
+              `${(tokenStats?.marketStats.marketcapInUsd)} USD`
             )
           }
         />
@@ -69,7 +69,7 @@ export default function TokenDescription({ token }: { token: Token }) {
             isTokenStatsLoading ? (
               <Skeleton className="h-[22px] w-full md:w-[119px]" />
             ) : (
-              `${toIntNumberFormat(tokenStats?.marketStats.liquidityInUsd)} USD`
+              `${(tokenStats?.marketStats.liquidityInUsd)} USD`
             )
           }
         />
@@ -80,7 +80,7 @@ export default function TokenDescription({ token }: { token: Token }) {
             isTokenStatsLoading ? (
               <Skeleton className="h-[22px] w-full md:w-[119px]" />
             ) : (
-              `${toIntNumberFormat(tokenStats?.marketStats?.circulatingSupplyInToken)} ${token?.symbol}`
+              `${(tokenStats?.marketStats?.circulatingSupplyInToken)} ${token?.symbol}`
             )
           }
         />
